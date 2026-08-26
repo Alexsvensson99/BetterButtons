@@ -73,6 +73,5 @@ jobs:
       - name: Publish the inspected tarball with provenance
         env:
           BETTERBUTTONS_PUBLISH: ${{ github.ref_name }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TARBALL: ${{ steps.package.outputs.tarball }}
         run: npm publish "./$TARBALL" --access public --provenance --ignore-scripts

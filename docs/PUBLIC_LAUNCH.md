@@ -1,6 +1,6 @@
 # Public launch checklist
 
-Repository readiness and public release are separate decisions. Complete every unchecked owner item immediately before launch.
+Repository readiness and public release are separate decisions. This record reflects the verified `2.0.0` launch completed on 2026-08-26.
 
 ## Prepared in the repository
 
@@ -18,20 +18,20 @@ Repository readiness and public release are separate decisions. Complete every u
 
 ## Owner decisions before public visibility
 
-- [ ] Confirm the provenance attestation in [PROVENANCE.md](PROVENANCE.md).
+- [x] Confirm the provenance attestation in [PROVENANCE.md](PROVENANCE.md).
 - [x] Use `2.0.0` as the first public package version.
-- [ ] Recheck and reserve `betterbuttons`, or choose an npm scope.
-- [ ] Confirm a private conduct-reporting contact method.
-- [ ] Enable GitHub Discussions and private vulnerability reporting.
+- [x] Recheck and reserve `betterbuttons`, or choose an npm scope.
+- [x] Confirm a private conduct-reporting contact method.
+- [x] Enable GitHub Discussions and private vulnerability reporting.
 - [x] Keep the initial showcase repository-local; no separate canonical hosting URL for `2.0.0`.
-- [ ] Review the exact commit, repository description, topics and public README.
-- [ ] Explicitly approve changing the GitHub repository from private to public.
+- [x] Review the exact commit, repository description, topics and public README.
+- [x] Explicitly approve changing the GitHub repository from private to public.
 
 ## Owner decisions before npm publication
 
-- [ ] Configure npm Trusted Publishing or another approved least-privilege release method.
-- [ ] Protect the release environment and require review.
+- [x] Configure npm Trusted Publishing or another approved least-privilege release method.
+- [x] Protect the release environment and require review.
 - [x] Convert `Unreleased` to a dated version in `CHANGELOG.md`.
 - [x] Remove `"private": true` in the reviewed release pull request.
-- [ ] Verify the tag equals `v${package.version}` and inspect the generated artifact.
-- [ ] Install the published version in a clean consumer before announcing it.
+- [x] Verify the tag equals `v${package.version}` and inspect the generated artifact.
+- [x] Install the published version in a clean consumer before announcing it.

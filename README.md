@@ -20,7 +20,7 @@ Use the checked-in source file directly:
 </button>
 ```
 
-Or import the built package from a bundler after the first npm release:
+Or install the published package from npm and import it from a bundler:
 
 ```bash
 npm install betterbuttons
@@ -30,7 +30,7 @@ npm install betterbuttons
 @import 'betterbuttons';
 ```
 
-The package build produces readable and minified stylesheets in `dist/`. The npm name was available when the release tooling was prepared, but it is not reserved until the first package is published.
+The published package includes readable and minified stylesheets in `dist/`.
 
 ## Build a button
 
@@ -111,7 +111,7 @@ Small fixes, new themes, accessibility improvements and documentation correction
 
 The project follows semantic versioning for the packaged CSS API. Changes are tracked in [CHANGELOG.md](CHANGELOG.md), and maintainership is described in [GOVERNANCE.md](GOVERNANCE.md).
 
-Repository preparation does not itself authorize public visibility or registry publication. Maintainers use the [public launch checklist](docs/PUBLIC_LAUNCH.md) and [provenance review](docs/PROVENANCE.md) for those separate decisions.
+Future public releases remain separately approval-gated. Maintainers use the [public launch record](docs/PUBLIC_LAUNCH.md), [release procedure](docs/RELEASING.md) and [provenance review](docs/PROVENANCE.md) for those decisions.
 
 ## License
 

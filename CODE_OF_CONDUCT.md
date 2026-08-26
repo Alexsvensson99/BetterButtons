@@ -16,7 +16,7 @@ Harassment, threats, discrimination, sexualized attention, deliberate intimidati
 
 ## Reporting and enforcement
 
-Report conduct concerns privately to the maintainer through the contact method on [Alexander Svensson's GitHub profile](https://github.com/Alexsvensson99). Do not open a public issue containing sensitive details.
+Report conduct concerns privately through the maintainer's [Svensson Design contact form](https://www.svensson.design/#contact). Do not open a public issue containing sensitive details.
 
 The maintainer may edit or remove content, issue a warning, temporarily restrict participation or permanently ban a participant. Reports will be handled as privately and promptly as reasonably possible. Anyone involved in a report will step aside from deciding its outcome where a conflict of interest exists.
 

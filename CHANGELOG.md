@@ -2,6 +2,8 @@
 
 All notable changes to BetterButtons are documented here. The project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
 ## [2.0.0] - 2026-08-24
 
 ### Added

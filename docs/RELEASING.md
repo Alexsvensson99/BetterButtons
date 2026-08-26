@@ -10,14 +10,14 @@ Only a maintainer with repository and package-registry authority performs a rele
 4. Update `package.json`, convert the changelog section to the version and release date, and regenerate the lockfile when package metadata affects it.
 5. Run `npm ci` and `npm run check` on Node.js 24 LTS, then confirm CI passes on Node.js 22 and 24.
 6. Inspect the tarball contents with `npm pack --dry-run` and verify the clean-consumer package test passed.
-7. Confirm the npm package name and publishing account immediately before the first release.
+7. Confirm package ownership and verify that npm Trusted Publishing still maps exactly to `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production` and the `npm publish` action.
 
 Removing or renaming a documented class or token, changing its meaning, or changing documented cascade-layer priority requires a major version. Backward-compatible additions use a minor version; compatible fixes use a patch version.
 
 ## Create the release
 
-1. In the reviewed release pull request, remove `"private": true` from `package.json`; this is the deliberate registry-publication gate.
-2. Merge the reviewed release pull request.
+1. Prepare a reviewed release change with the selected version, dated changelog entry and regenerated lockfile when needed.
+2. Land the reviewed commit on `main` while preserving the maintainer's GitHub noreply identity.
 3. Create an annotated `v<version>` tag on the verified `main` commit.
 4. Push the tag and wait for the package workflow to validate it, run the full quality suite, then build the tarball, checksum and CycloneDX SBOM with the pinned npm CLI.
 5. Download the artifact, verify `SHA256SUMS`, inspect the tarball and copy its lowercase SHA-256 value.
@@ -27,15 +27,17 @@ Removing or renaming a documented class or token, changing its meaning, or chang
 
 Do not publish from an unreviewed branch, bypass failing checks or reuse a version that reached a registry.
 
-## First npm release
+## Trusted Publishing
 
-The npm package does not exist until its first successful publish, so Trusted Publishing cannot be configured beforehand. Bootstrap `2.0.0` with this bounded exception:
+BetterButtons publishes through npm Trusted Publishing. The workflow receives a short-lived OIDC credential from GitHub Actions and contains no npm access token.
 
-1. The maintainer creates a short-lived granular npm token that is limited to package publication and explicitly permitted for the required 2FA policy.
-2. Store it only as the `NPM_TOKEN` secret in the protected `npm-production` GitHub environment. Never commit or paste it into an issue, pull request, log or local project file.
-3. Run the reviewed tag workflow once, approve the environment deployment and verify that npm displays provenance.
-4. In the new npm package settings, configure GitHub Actions as the Trusted Publisher for `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production`, with `npm publish` as the allowed action.
-5. Delete the temporary environment secret and remove the `NODE_AUTH_TOKEN` line from the workflow in the immediate post-release commit. Future publishes then use short-lived OIDC credentials.
+- npm trusts only `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production` and the `npm publish` action.
+- The workflow retains `id-token: write`, runs on a GitHub-hosted runner and invokes `npm publish` directly.
+- The protected `npm-production` environment requires maintainer approval before publication.
+- Package publishing requires 2FA and disallows bypass-2FA tokens.
+- No `NPM_TOKEN` repository or environment secret is required.
+
+The one-time token used to bootstrap `2.0.0` was revoked after the package provenance, Trusted Publisher mapping and restrictive publishing policy were verified. Do not recreate a long-lived publishing token as part of the normal release procedure.
 
 ## After release
 

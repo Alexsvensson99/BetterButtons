@@ -53,6 +53,7 @@ test('npm publication is manual, tag-bound and provenance-enabled', () => {
   assert.match(publishWorkflow, /startsWith\(github\.ref, 'refs\/tags\/v'\)/);
   assert.match(publishWorkflow, /BETTERBUTTONS_PUBLISH: \$\{\{ github\.ref_name \}\}/);
   assert.match(publishWorkflow, /npm publish "\.\/\$TARBALL" --access public --provenance --ignore-scripts/);
+  assert.doesNotMatch(publishWorkflow, /NODE_AUTH_TOKEN|NPM_TOKEN|\bsecrets\./);
   assert.doesNotMatch(publishWorkflow, /pull_request:/);
   assert.doesNotMatch(publishWorkflow, /^\s+push:/m);
 });

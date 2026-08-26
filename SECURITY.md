@@ -4,13 +4,17 @@ BetterButtons is a CSS library and static showcase, but supply-chain, browser an
 
 ## Supported versions
 
-Security fixes target the latest released major version. Before the first public release, only the current `main` branch is supported.
+Security fixes target the latest released major version.
+
+| Version | Supported |
+| ------- | --------- |
+| 2.x     | Yes       |
 
 ## Report a vulnerability
 
 Do not open a public issue.
 
-Use GitHub's private vulnerability reporting option in the repository's **Security** tab when it is available. If that option is unavailable, contact the maintainer privately through the contact method on [Alexander Svensson's GitHub profile](https://github.com/Alexsvensson99).
+Use GitHub's private vulnerability reporting option in the repository's **Security** tab. If GitHub reporting is unavailable, contact the maintainer privately through the [Svensson Design contact form](https://www.svensson.design/#contact).
 
 Include:
 
