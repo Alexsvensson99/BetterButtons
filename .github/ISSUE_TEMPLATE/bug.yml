@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible problem in the CSS library or showcase.
+title: '[Bug]: '
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to provide a focused reproduction.
+  - type: input
+    id: version
+    attributes:
+      label: BetterButtons version
+      description: Package version, tag or commit SHA.
+      placeholder: 2.0.0 or a1b2c3d
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system
+      placeholder: Chrome 140 on macOS 27
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include HTML, relevant custom CSS and a repository or sandbox link when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: accessibility
+    attributes:
+      label: Does this affect accessibility?
+      options:
+        - Unsure
+        - 'Yes'
+        - 'No'
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for an existing issue.
+          required: true
+        - label: I removed private data and credentials from the reproduction.
+          required: true
+        - label: This is not a security vulnerability; those are reported according to SECURITY.md.
+          required: true

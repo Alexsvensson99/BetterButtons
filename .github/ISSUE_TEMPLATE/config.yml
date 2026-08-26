@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/Alexsvensson99/BetterButtons/security/advisories/new
+    about: Report a vulnerability privately. Never include security details in a public issue.

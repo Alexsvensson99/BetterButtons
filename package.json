@@ -1,0 +1,82 @@
+{
+  "name": "betterbuttons",
+  "version": "2.0.0",
+  "description": "A dependency-free CSS button system with up to 57,600 class combinations and an accessible visual builder.",
+  "keywords": [
+    "accessibility",
+    "button",
+    "css",
+    "design-system",
+    "frontend",
+    "ui"
+  ],
+  "homepage": "https://github.com/Alexsvensson99/BetterButtons#readme",
+  "bugs": {
+    "url": "https://github.com/Alexsvensson99/BetterButtons/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexsvensson99/BetterButtons.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Alexander Svensson",
+    "url": "https://github.com/Alexsvensson99"
+  },
+  "type": "module",
+  "style": "dist/betterbuttons.css",
+  "unpkg": "dist/betterbuttons.min.css",
+  "jsdelivr": "dist/betterbuttons.min.css",
+  "exports": {
+    ".": "./dist/betterbuttons.css",
+    "./min": "./dist/betterbuttons.min.css",
+    "./source": "./button-library.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "button-library.css",
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": [
+    "*.css",
+    "dist/*.css"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "npm run build && npm run format:check && npm run lint && npm run test:unit && npm run test:browser && npm run test:visual && npm run pack:check",
+    "clean": "node scripts/clean.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "lint:css": "stylelint \"*.css\" \"tests/**/*.css\"",
+    "lint:html": "html-validate index.html \"examples/**/*.html\"",
+    "lint:js": "eslint .",
+    "pack:check": "node scripts/pack-check.mjs",
+    "prepack": "npm run build",
+    "prepublishOnly": "node scripts/publish-guard.mjs",
+    "serve": "node scripts/serve.mjs",
+    "test": "npm run test:unit",
+    "test:browser": "playwright test",
+    "test:visual": "playwright test --config=playwright.visual.config.mjs",
+    "test:visual:update": "playwright test --config=playwright.visual.config.mjs --update-snapshots",
+    "test:unit": "node --test tests/unit/*.test.mjs"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "eslint": "10.9.0",
+    "globals": "17.11.0",
+    "html-validate": "11.9.0",
+    "lightningcss": "1.33.0",
+    "prettier": "3.9.6",
+    "stylelint": "17.14.1",
+    "stylelint-config-standard": "40.0.0"
+  }
+}

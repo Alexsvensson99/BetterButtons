@@ -1,0 +1,18 @@
+*,
+*::before,
+*::after {
+  caret-color: transparent !important;
+  scroll-behavior: auto !important;
+}
+
+html {
+  scrollbar-width: none !important;
+}
+
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+.toast {
+  display: none !important;
+}

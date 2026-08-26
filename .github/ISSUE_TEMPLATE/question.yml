@@ -1,0 +1,36 @@
+name: Usage question
+description: Ask for help with a focused BetterButtons integration or customization.
+title: '[Question]: '
+labels:
+  - question
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to build?
+    validations:
+      required: true
+  - type: textarea
+    id: attempt
+    attributes:
+      label: Minimal markup and CSS
+      description: Remove credentials and private product data before posting.
+      render: html
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: BetterButtons version and browser
+      placeholder: 2.0.0, Chrome 140
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I checked the API, customization and accessibility guides.
+          required: true
+        - label: I searched existing issues for the same question.
+          required: true

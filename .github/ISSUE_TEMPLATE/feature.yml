@@ -1,0 +1,43 @@
+name: Feature proposal
+description: Propose a focused improvement to the public API, accessibility or documentation.
+title: '[Proposal]: '
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What cannot be done clearly with the current API?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed direction
+      description: Show suggested classes, tokens or markup when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Could customization or an existing composition solve this?
+    validations:
+      required: true
+  - type: textarea
+    id: maintenance
+    attributes:
+      label: Compatibility and maintenance impact
+      description: Note potential breaking changes, accessibility concerns and test needs.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues, discussions and the roadmap.
+          required: true
+        - label: I am willing to help document or test this proposal.
+          required: false
