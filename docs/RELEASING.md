@@ -5,19 +5,20 @@ Only a maintainer with repository and package-registry authority performs a rele
 ## Before release
 
 1. Confirm the target commit is on `main` and the working tree is clean.
-2. Review all changes under `Unreleased` in `CHANGELOG.md`.
-3. Choose the semantic version based on the documented public CSS classes and tokens.
-4. Update `package.json`, convert the changelog section to the version and release date, and regenerate the lockfile when package metadata affects it.
-5. Run `npm ci` and `npm run check` on Node.js 24 LTS, then confirm CI passes on Node.js 22 and 24.
-6. Inspect the tarball contents with `npm pack --dry-run` and verify the clean-consumer package test passed.
-7. Confirm package ownership and verify that npm Trusted Publishing still maps exactly to `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production` and the `npm publish` action.
+2. Confirm every maintainer author and committer identity uses the approved GitHub noreply address described in [COMMIT_IDENTITY.md](COMMIT_IDENTITY.md).
+3. Review all changes under `Unreleased` in `CHANGELOG.md`.
+4. Choose the semantic version based on the documented public CSS classes and tokens.
+5. Update `package.json`, convert the changelog section to the version and release date, and regenerate the lockfile when package metadata affects it.
+6. Run `npm ci` and `npm run check` on Node.js 24 LTS, then confirm CI passes on Node.js 22 and 24.
+7. Inspect the tarball contents with `npm pack --dry-run` and verify the clean-consumer package test passed.
+8. Confirm package ownership and verify that npm Trusted Publishing still maps exactly to `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production` and the `npm publish` action.
 
 Removing or renaming a documented class or token, changing its meaning, or changing documented cascade-layer priority requires a major version. Backward-compatible additions use a minor version; compatible fixes use a patch version.
 
 ## Create the release
 
 1. Prepare a reviewed release change with the selected version, dated changelog entry and regenerated lockfile when needed.
-2. Land the reviewed commit on `main` while preserving the maintainer's GitHub noreply identity.
+2. Land the reviewed commit on `main` only after the required `Commit identity privacy` check passes.
 3. Create an annotated `v<version>` tag on the verified `main` commit.
 4. Push the tag and wait for the package workflow to validate it, run the full quality suite, then build the tarball, checksum and CycloneDX SBOM with the pinned npm CLI.
 5. Download the artifact, verify `SHA256SUMS`, inspect the tarball and copy its lowercase SHA-256 value.

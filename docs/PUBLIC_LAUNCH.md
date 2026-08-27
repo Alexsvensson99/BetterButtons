@@ -23,7 +23,7 @@ Repository readiness and public release are separate decisions. This record refl
 - [x] Recheck and reserve `betterbuttons`, or choose an npm scope.
 - [x] Confirm a private conduct-reporting contact method.
 - [x] Enable GitHub Discussions and private vulnerability reporting.
-- [x] Keep the initial showcase repository-local; no separate canonical hosting URL for `2.0.0`.
+- [x] Publish the canonical visual builder at <https://www.svensson.design/BetterButtons/> using HTTPS GitHub Pages.
 - [x] Review the exact commit, repository description, topics and public README.
 - [x] Explicitly approve changing the GitHub repository from private to public.
 

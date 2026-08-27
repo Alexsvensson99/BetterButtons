@@ -4,6 +4,15 @@ All notable changes to BetterButtons are documented here. The project follows [S
 
 ## [Unreleased]
 
+### Added
+
+- A maintainer-specific commit-identity privacy check that blocks non-noreply author or committer metadata without echoing rejected addresses.
+- A canonical HTTPS link to the live visual builder in the public README and package metadata.
+
+### Changed
+
+- Updated launch, release, contribution and roadmap documentation for the completed 2.0 publication.
+
 ## [2.0.0] - 2026-08-24
 
 ### Added

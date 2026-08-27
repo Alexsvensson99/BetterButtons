@@ -47,6 +47,8 @@ If a browser check fails, include the failure output and screenshot in the pull 
 
 Explain the problem, the chosen approach and how you verified it. Maintainers may ask to split broad changes, adjust public naming or add accessibility coverage. All contributions are made under the repository's MIT License.
 
+The repository's commit-identity privacy check applies only to the named maintainer. External contributors may use their own preferred Git identity.
+
 ## Community expectations
 
 Be constructive and specific. Review [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before participating.
