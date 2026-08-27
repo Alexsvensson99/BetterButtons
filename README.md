@@ -3,6 +3,8 @@
 [![CI](https://github.com/Alexsvensson99/BetterButtons/actions/workflows/ci.yml/badge.svg)](https://github.com/Alexsvensson99/BetterButtons/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-7dd3a8.svg)](LICENSE)
 
+**[Open the live visual builder →](https://www.svensson.design/BetterButtons/)**
+
 BetterButtons is a dependency-free CSS button system with an accessible visual builder. Combine 20 themes, 12 styles, 6 sizes, 4 shapes and 10 motion options into up to 57,600 core class combinations, then copy production-ready HTML. The builder adapts markup for combinations such as icon-only circles.
 
 The library has no runtime JavaScript and no framework dependency. The JavaScript in this repository powers only the documentation showcase and builder.

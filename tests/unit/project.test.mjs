@@ -60,7 +60,8 @@ test('npm publication is manual, tag-bound and provenance-enabled', () => {
 
 test('continuous integration is public-runner safe', () => {
   assert.match(ciWorkflow, /permissions:\s*\n\s+contents: read/);
-  assert.equal([...ciWorkflow.matchAll(/^\s+runs-on: ubuntu-24\.04$/gm)].length, 2);
+  assert.equal([...ciWorkflow.matchAll(/^\s+runs-on: ubuntu-24\.04$/gm)].length, 3);
+  assert.match(ciWorkflow, /name: Commit identity privacy/);
   assert.doesNotMatch(ciWorkflow, /\bself-hosted\b/);
   assert.doesNotMatch(ciWorkflow, /betterbuttons-private/);
   assert.doesNotMatch(ciWorkflow, /pull_request_target:/);
