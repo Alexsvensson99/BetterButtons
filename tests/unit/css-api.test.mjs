@@ -91,3 +91,35 @@ test('motion has an explicit user preference fallback', () => {
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /html\[data-reduced-motion=['"]true['"]\]/);
 });
+
+test('directional utilities use logical geometry and RTL-aware motion', () => {
+  const extras = css.slice(css.indexOf('@layer bb-extras'), css.indexOf('@media (prefers-contrast'));
+  assert.ok(extras.length > 0, 'Extras layer is missing');
+  assert.doesNotMatch(extras, /\b(?:margin|padding|border)-(?:left|right)\b/);
+  assert.doesNotMatch(extras, /(?:^|[;{\s])(?:left|right):/m);
+  for (const property of [
+    'margin-inline-start',
+    'border-start-start-radius',
+    'border-start-end-radius',
+    'border-inline-start-color',
+    'inset-inline-end',
+    'inset-inline-start'
+  ]) {
+    assert.ok(extras.includes(property), `Logical property is missing: ${property}`);
+  }
+  assert.match(css, /\.bb-anim-shine:dir\(rtl\)/);
+  assert.match(css, /\.bb-anim-slide:dir\(rtl\)/);
+});
+
+test('high-contrast preferences have explicit control, focus and state treatment', () => {
+  const contrastBlock = css.slice(css.indexOf('@media (prefers-contrast: more)'));
+  assert.match(contrastBlock, /border-color:\s*currentColor/);
+  assert.match(contrastBlock, /outline:\s*3px solid currentColor/);
+
+  const forcedColorsBlock = css.slice(css.indexOf('@media (forced-colors: active)'));
+  for (const systemColor of ['ButtonText', 'Highlight', 'GrayText', 'Canvas']) {
+    assert.ok(forcedColorsBlock.includes(systemColor), `Forced-colors block is missing ${systemColor}`);
+  }
+  assert.match(forcedColorsBlock, /\.bb-badge\s*\{/);
+  assert.match(forcedColorsBlock, /\.bb-loading::after/);
+});

@@ -1,14 +1,14 @@
 {
   "name": "betterbuttons",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "files": {
     "betterbuttons.css": {
-      "bytes": 19506,
-      "sha256": "71aa95bac3cc63c8c10c444d4a5c6d21e7bef764830e83b6254862e21acfd45a"
+      "bytes": 20759,
+      "sha256": "e1c2819fde2832bce546f8fb6beb53f48c69aa8c43fa54ea6d93ca46a0af4ede"
     },
     "betterbuttons.min.css": {
-      "bytes": 15339,
-      "sha256": "d1391cc1cfa6b01296a3189dd5a6dca64e4b29a880af2e4dcbb6963b21e43769"
+      "bytes": 16339,
+      "sha256": "b58e22890446179fc0156dcb89d531166e5cb37d961c620685a5b05764a71759"
     }
   }
 }

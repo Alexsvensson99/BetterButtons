@@ -39,6 +39,12 @@ The base class has a visible `:focus-visible` ring. Do not remove it without pro
 
 For `bb-group` or `bb-split`, give the container a group label and preserve a logical DOM and tab order.
 
+## Language and direction
+
+Set the correct `lang` and `dir` on the document or the nearest localized region. BetterButtons mirrors grouped corners, split separators, badges and directional motion in right-to-left contexts without reversing DOM order. Keyboard and screen-reader order should continue to follow the meaningful source order.
+
+Do not use CSS `direction` or visual reordering as a substitute for semantic document direction. Test mixed-direction labels and icons with real translated content.
+
 ## Color and surfaces
 
 The included theme-and-style combinations are designed with contrast in mind, but transparent styles inherit the surrounding surface and custom tokens can invalidate contrast. Check normal text, hover, focus, disabled and forced-colors states in the actual product context.
@@ -57,6 +63,7 @@ The repository runs automated axe checks and keyboard-focused browser tests. Bef
 - browser zoom at 200% and 400%;
 - a screen reader on at least one target platform;
 - forced-colors or high-contrast mode;
+- both left-to-right and right-to-left content when the product is localized;
 - reduced-motion mode;
 - every custom theme on its real background.
 

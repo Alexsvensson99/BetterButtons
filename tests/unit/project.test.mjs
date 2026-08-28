@@ -15,7 +15,12 @@ const requiredFiles = [
   'SECURITY.md',
   'app.js',
   'button-library.css',
+  'docs/FRAMEWORKS.md',
   'docs/VISUAL_TESTING.md',
+  'examples/frameworks/react.md',
+  'examples/frameworks/svelte.md',
+  'examples/frameworks/vue.md',
+  'examples/rtl.html',
   'favicon.svg',
   'index.html',
   'package.json',
@@ -88,6 +93,7 @@ test('the builder exposes the complete documented matrix', () => {
   assert.equal([...html.matchAll(/data-control="animation"/g)].length, 10);
   assert.equal([...html.matchAll(/<option value="bb-(?:xs|sm|md|lg|xl|2xl)"/g)].length, 6);
   assert.equal([...html.matchAll(/<option value="bb-(?:rounded|pill|square|circle)"/g)].length, 4);
+  assert.equal([...html.matchAll(/data-control="direction"/g)].length, 2);
 });
 
 test('the saved theme is applied before showcase styles load', () => {

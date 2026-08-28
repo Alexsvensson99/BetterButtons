@@ -3,6 +3,7 @@ const state = {
   style: 'bb-solid',
   size: 'bb-lg',
   shape: 'bb-pill',
+  direction: 'ltr',
   animation: 'bb-anim-shine',
   shadow: false,
   loading: false,
@@ -65,6 +66,7 @@ function currentClasses() {
 function buttonMarkup() {
   const label = escapeHtml(state.label.trim() || 'Button');
   const attributes = ['type="button"', `class="${currentClasses().join(' ')}"`];
+  if (state.direction === 'rtl') attributes.push('dir="rtl"');
   if (state.shape === 'bb-circle') attributes.push(`aria-label="${label}"`);
   if (state.loading) attributes.push('aria-busy="true"', 'disabled');
   const content =
@@ -80,6 +82,7 @@ function updateBuilder() {
   if (!preview || !code) return;
 
   preview.className = currentClasses().join(' ');
+  preview.dir = state.direction;
   preview.setAttribute('aria-label', state.label.trim() || 'Button');
   preview.disabled = state.loading;
   if (state.loading) preview.setAttribute('aria-busy', 'true');

@@ -1,6 +1,6 @@
 {
   "name": "betterbuttons",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A dependency-free CSS button system with up to 57,600 class combinations and an accessible visual builder.",
   "keywords": [
     "accessibility",

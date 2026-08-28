@@ -53,7 +53,13 @@ Every button starts with `bb-btn`. Add one class from each family:
 | Motion  | Optional    | `bb-anim-shine`, `bb-anim-glow`, `bb-anim-none`   |
 | Utility | Optional    | `bb-shadow`, `bb-block`, `bb-loading`             |
 
-See the complete [CSS API](docs/API.md), [customization guide](docs/CUSTOMIZATION.md), [browser support](docs/BROWSER_SUPPORT.md) and [accessibility guidance](docs/ACCESSIBILITY.md).
+See the complete [CSS API](docs/API.md), [framework integrations](docs/FRAMEWORKS.md), [customization guide](docs/CUSTOMIZATION.md), [browser support](docs/BROWSER_SUPPORT.md) and [accessibility guidance](docs/ACCESSIBILITY.md).
+
+## Framework integrations
+
+BetterButtons uses the same semantic HTML in every framework. Import `betterbuttons` once, then compose classes directly on native buttons or links—no adapter or client-side initialization is required.
+
+Copy the maintained [React](examples/frameworks/react.md), [Vue](examples/frameworks/vue.md) or [Svelte](examples/frameworks/svelte.md) example, or read the complete [framework integration guide](docs/FRAMEWORKS.md). The standalone [RTL example](examples/rtl.html) demonstrates direction-aware groups, split actions, badges and loading states.
 
 ## Accessible defaults
 

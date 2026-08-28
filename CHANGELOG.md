@@ -8,10 +8,16 @@ All notable changes to BetterButtons are documented here. The project follows [S
 
 - A maintainer-specific commit-identity privacy check that blocks non-noreply author or committer metadata without echoing rejected addresses.
 - A canonical HTTPS link to the live visual builder in the public README and package metadata.
+- Copyable React, Vue and Svelte integration examples that preserve native button and accessible loading semantics.
+- A standalone Arabic RTL example plus a direction control in the visual builder.
+- Automated contracts for logical geometry, RTL rendering and expanded forced-colors states.
 
 ### Changed
 
 - Updated launch, release, contribution and roadmap documentation for the completed 2.0 publication.
+- Replaced physical group, split, badge and loading geometry with writing-mode-aware logical properties.
+- Mirrored directional shine and slide motion in right-to-left contexts.
+- Strengthened control borders, focus treatment, disabled states, badges and loading indicators for increased-contrast and forced-colors preferences.
 
 ## [2.0.0] - 2026-08-24
 

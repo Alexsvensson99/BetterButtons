@@ -1,4 +1,4 @@
-/*! BetterButtons v2.0.0 | MIT License | github.com/Alexsvensson99/BetterButtons */
+/*! BetterButtons v2.1.0 | MIT License | github.com/Alexsvensson99/BetterButtons */
 @layer bb-base {
   .bb-btn {
     background: var(--bb-primary);
@@ -579,6 +579,16 @@
     }
   }
 
+  @keyframes bb-shine-rtl {
+    from {
+      transform: translateX(130%);
+    }
+
+    to {
+      transform: translateX(-130%);
+    }
+  }
+
   @keyframes bb-pop {
     0% {
       transform: scale(1);
@@ -664,6 +674,14 @@
     animation: .65s ease-out bb-shine;
   }
 
+  .bb-anim-shine:dir(rtl):before {
+    transform: translateX(130%);
+  }
+
+  .bb-anim-shine:dir(rtl):hover:before {
+    animation-name: bb-shine-rtl;
+  }
+
   .bb-anim-pop:hover {
     animation: .45s cubic-bezier(.2, .8, .2, 1) bb-pop;
   }
@@ -713,6 +731,10 @@
     transform: translateX(-100%);
   }
 
+  .bb-anim-slide:dir(rtl):before {
+    transform: translateX(100%);
+  }
+
   .bb-anim-slide:hover:before {
     transform: translateX(0);
   }
@@ -758,16 +780,18 @@
 
   .bb-group > .bb-btn {
     border-radius: 0;
-    margin-left: -1px;
+    margin-inline-start: -1px;
   }
 
   .bb-group > .bb-btn:first-child {
-    border-radius: var(--bb-radius-md) 0 0 var(--bb-radius-md);
-    margin-left: 0;
+    border-start-start-radius: var(--bb-radius-md);
+    border-end-start-radius: var(--bb-radius-md);
+    margin-inline-start: 0;
   }
 
   .bb-group > .bb-btn:last-child {
-    border-radius: 0 var(--bb-radius-md) var(--bb-radius-md) 0;
+    border-start-end-radius: var(--bb-radius-md);
+    border-end-end-radius: var(--bb-radius-md);
   }
 
   .bb-split {
@@ -779,13 +803,15 @@
   }
 
   .bb-split .bb-btn:first-child {
-    border-radius: var(--bb-radius-md) 0 0 var(--bb-radius-md);
+    border-start-start-radius: var(--bb-radius-md);
+    border-end-start-radius: var(--bb-radius-md);
   }
 
   .bb-split .bb-btn:last-child {
-    border-radius: 0 var(--bb-radius-md) var(--bb-radius-md) 0;
-    border-left-color: #ffffff40;
-    margin-left: -1px;
+    border-inline-start-color: #ffffff40;
+    border-start-end-radius: var(--bb-radius-md);
+    border-end-end-radius: var(--bb-radius-md);
+    margin-inline-start: -1px;
   }
 
   .bb-badge {
@@ -797,12 +823,13 @@
     align-items: center;
     min-width: 1.45em;
     height: 1.45em;
-    padding: 0 .25em;
+    padding-block: 0;
+    padding-inline: .25em;
     font-size: .7em;
     display: inline-flex;
     position: absolute;
-    top: -.55em;
-    right: -.55em;
+    inset-block-start: -.55em;
+    inset-inline-end: -.55em;
   }
 
   .bb-loading {
@@ -813,19 +840,19 @@
   .bb-loading:after {
     content: "";
     border: 2px solid #ffffffb8;
-    border-right-color: #0000;
+    border-inline-end-color: #0000;
     border-radius: 50%;
     width: 1em;
     height: 1em;
     animation: .7s linear infinite bb-spin;
     position: absolute;
-    top: calc(50% - .5em);
-    left: calc(50% - .5em);
+    inset-block-start: calc(50% - .5em);
+    inset-inline-start: calc(50% - .5em);
   }
 
   .bb-outline.bb-loading:after, .bb-ghost.bb-loading:after, .bb-glass.bb-loading:after, .bb-soft.bb-loading:after, .bb-neon-style.bb-loading:after {
     border-color: var(--bb-primary);
-    border-right-color: #0000;
+    border-inline-end-color: #0000;
   }
 }
 
@@ -852,6 +879,18 @@
   --bb-text-2xl: 1.4rem;
 }
 
+@media (prefers-contrast: more) {
+  .bb-btn {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+
+  .bb-btn:focus-visible {
+    outline-offset: 3px;
+    outline: 3px solid;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bb-btn, .bb-btn:hover, .bb-btn:before, .bb-btn:after {
     scroll-behavior: auto !important;
@@ -874,5 +913,21 @@ html[data-reduced-motion="true"] .bb-btn, html[data-reduced-motion="true"] .bb-b
   .bb-btn:focus-visible {
     outline-offset: 3px;
     outline: 2px solid highlight;
+  }
+
+  .bb-btn:disabled, .bb-btn[aria-disabled="true"] {
+    opacity: 1;
+    border-color: graytext;
+  }
+
+  .bb-badge {
+    color: buttontext;
+    background: canvas;
+    border-color: buttontext;
+  }
+
+  .bb-loading:after, .bb-outline.bb-loading:after, .bb-ghost.bb-loading:after, .bb-glass.bb-loading:after, .bb-soft.bb-loading:after, .bb-neon-style.bb-loading:after {
+    border-color: buttontext;
+    border-inline-end-color: #0000;
   }
 }

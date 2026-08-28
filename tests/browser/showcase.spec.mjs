@@ -70,6 +70,18 @@ test('circle output becomes an accessible icon-only button', async ({ page }) =>
   await expect(page.locator('#code-output')).toContainText('aria-label="Continue"');
 });
 
+test('the builder previews and exports right-to-left direction', async ({ page }) => {
+  await page.getByRole('button', { name: 'Right to left', exact: true }).click();
+
+  const preview = page.locator('#builder-preview-button');
+  await expect(preview).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('#code-output')).toContainText('dir="rtl"');
+  await expect(page.getByRole('button', { name: 'Right to left', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+});
+
 test('explicit shapes have stable priority over style geometry', async ({ page }) => {
   await page.getByRole('button', { name: 'Flat', exact: true }).click();
   await page.getByLabel('Button shape').selectOption('bb-pill');
@@ -128,6 +140,13 @@ test('forced-colors mode keeps native adjustment and focus treatment', async ({ 
   await preview.focus();
   await expect(preview).toHaveCSS('forced-color-adjust', 'auto');
   await expect(preview).toHaveCSS('outline-style', 'solid');
+
+  await page.goto('/examples/rtl.html');
+  const loading = page.locator('.bb-loading');
+  const badge = page.locator('.bb-badge');
+  await expect(loading).toHaveCSS('opacity', '1');
+  await expect(badge).toHaveCSS('forced-color-adjust', 'auto');
+  await expect(badge).toHaveCSS('border-top-style', 'solid');
 });
 
 test('the built quick-start example works as a standalone integration', async ({ page }) => {
@@ -143,6 +162,27 @@ test('the built quick-start example works as a standalone integration', async ({
     scrollWidth: document.documentElement.scrollWidth
   }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
+});
+
+test('the RTL example mirrors logical group edges and remains accessible', async ({ page }) => {
+  await page.goto('/examples/rtl.html');
+  const groupButtons = page.locator('.bb-group > .bb-btn');
+  const first = groupButtons.first();
+  const last = groupButtons.last();
+  const firstBox = await first.boundingBox();
+  const lastBox = await last.boundingBox();
+  expect(firstBox.x).toBeGreaterThan(lastBox.x);
+  await expect(first).toHaveCSS('border-top-right-radius', '12px');
+  await expect(first).toHaveCSS('border-top-left-radius', '0px');
+  await expect(last).toHaveCSS('border-top-left-radius', '12px');
+  await expect(last).toHaveCSS('border-top-right-radius', '0px');
+
+  const badgeButtonBox = await page.locator('.bb-badge').locator('..').boundingBox();
+  const badgeBox = await page.locator('.bb-badge').boundingBox();
+  expect(badgeBox.x).toBeLessThan(badgeButtonBox.x);
+
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
 });
 
 test('mobile navigation works without horizontal overflow', async ({ page }) => {

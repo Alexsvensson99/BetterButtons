@@ -52,6 +52,8 @@ The source uses cascade layers. Application CSS that is not in a layer and loads
 
 Prefer a product-specific class over targeting generated class combinations. Do not depend on internal keyframe names or stylesheet declaration order.
 
+Use logical properties such as `padding-inline`, `margin-inline-start` and `border-start-start-radius` for product overrides that must follow writing direction. BetterButtons inherits `dir` and does not require a separate RTL stylesheet.
+
 ## Keep customizations accessible
 
 After changing tokens, test text contrast, focus visibility, hover, disabled, reduced-motion and forced-colors states. Transparent styles such as `bb-outline`, `bb-ghost` and `bb-glass` must be checked on every background where they appear.

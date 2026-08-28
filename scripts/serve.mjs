@@ -13,6 +13,7 @@ const publicFiles = new Set([
   'dist/betterbuttons.min.css',
   'dist/manifest.json',
   'examples/quick-start.html',
+  'examples/rtl.html',
   'favicon.svg',
   'index.html',
   'styles.css',

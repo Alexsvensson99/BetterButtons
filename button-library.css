@@ -1,4 +1,4 @@
-/* BetterButtons v2 — the reusable, dependency-free button system. */
+/* BetterButtons v2.1 — the reusable, dependency-free button system. */
 
 @layer bb-base, bb-themes, bb-styles, bb-sizes, bb-shapes, bb-motion, bb-extras;
 
@@ -619,6 +619,16 @@
     }
   }
 
+  @keyframes bb-shine-rtl {
+    from {
+      transform: translateX(130%);
+    }
+
+    to {
+      transform: translateX(-130%);
+    }
+  }
+
   @keyframes bb-pop {
     0% {
       transform: scale(1);
@@ -706,6 +716,14 @@
     animation: bb-shine 0.65s ease-out;
   }
 
+  .bb-anim-shine:dir(rtl)::before {
+    transform: translateX(130%);
+  }
+
+  .bb-anim-shine:dir(rtl):hover::before {
+    animation-name: bb-shine-rtl;
+  }
+
   .bb-anim-pop:hover {
     animation: bb-pop 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -758,6 +776,10 @@
     transition: transform 0.3s ease;
   }
 
+  .bb-anim-slide:dir(rtl)::before {
+    transform: translateX(100%);
+  }
+
   .bb-anim-slide:hover::before {
     transform: translateX(0);
   }
@@ -806,16 +828,18 @@
 
   .bb-group > .bb-btn {
     border-radius: 0;
-    margin-left: -1px;
+    margin-inline-start: -1px;
   }
 
   .bb-group > .bb-btn:first-child {
-    border-radius: var(--bb-radius-md) 0 0 var(--bb-radius-md);
-    margin-left: 0;
+    border-end-start-radius: var(--bb-radius-md);
+    border-start-start-radius: var(--bb-radius-md);
+    margin-inline-start: 0;
   }
 
   .bb-group > .bb-btn:last-child {
-    border-radius: 0 var(--bb-radius-md) var(--bb-radius-md) 0;
+    border-end-end-radius: var(--bb-radius-md);
+    border-start-end-radius: var(--bb-radius-md);
   }
 
   .bb-split {
@@ -827,13 +851,15 @@
   }
 
   .bb-split .bb-btn:first-child {
-    border-radius: var(--bb-radius-md) 0 0 var(--bb-radius-md);
+    border-end-start-radius: var(--bb-radius-md);
+    border-start-start-radius: var(--bb-radius-md);
   }
 
   .bb-split .bb-btn:last-child {
-    border-left-color: rgba(255, 255, 255, 0.25);
-    border-radius: 0 var(--bb-radius-md) var(--bb-radius-md) 0;
-    margin-left: -1px;
+    border-end-end-radius: var(--bb-radius-md);
+    border-inline-start-color: rgba(255, 255, 255, 0.25);
+    border-start-end-radius: var(--bb-radius-md);
+    margin-inline-start: -1px;
   }
 
   .bb-badge {
@@ -847,10 +873,11 @@
     height: 1.45em;
     justify-content: center;
     min-width: 1.45em;
-    padding: 0 0.25em;
+    inset-block-start: -0.55em;
+    inset-inline-end: -0.55em;
+    padding-block: 0;
+    padding-inline: 0.25em;
     position: absolute;
-    right: -0.55em;
-    top: -0.55em;
   }
 
   .bb-loading {
@@ -861,13 +888,13 @@
   .bb-loading::after {
     animation: bb-spin 0.7s linear infinite;
     border: 2px solid rgba(255, 255, 255, 0.72);
-    border-right-color: transparent;
+    border-inline-end-color: transparent;
     border-radius: 50%;
     content: '';
     height: 1em;
-    left: calc(50% - 0.5em);
+    inset-block-start: calc(50% - 0.5em);
+    inset-inline-start: calc(50% - 0.5em);
     position: absolute;
-    top: calc(50% - 0.5em);
     width: 1em;
   }
 
@@ -877,7 +904,19 @@
   .bb-soft.bb-loading::after,
   .bb-neon-style.bb-loading::after {
     border-color: var(--bb-primary);
-    border-right-color: transparent;
+    border-inline-end-color: transparent;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .bb-btn {
+    border-color: currentColor;
+    border-width: 2px;
+  }
+
+  .bb-btn:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
   }
 }
 
@@ -909,5 +948,27 @@ html[data-reduced-motion='true'] .bb-btn::after {
   .bb-btn:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: 3px;
+  }
+
+  .bb-btn:disabled,
+  .bb-btn[aria-disabled='true'] {
+    border-color: GrayText;
+    opacity: 1;
+  }
+
+  .bb-badge {
+    background: Canvas;
+    border-color: ButtonText;
+    color: ButtonText;
+  }
+
+  .bb-loading::after,
+  .bb-outline.bb-loading::after,
+  .bb-ghost.bb-loading::after,
+  .bb-glass.bb-loading::after,
+  .bb-soft.bb-loading::after,
+  .bb-neon-style.bb-loading::after {
+    border-color: ButtonText;
+    border-inline-end-color: transparent;
   }
 }

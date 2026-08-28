@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BetterButtons RTL example</title>
+    <link rel="stylesheet" href="../dist/betterbuttons.css" />
+    <style>
+      body {
+        background: #f4f7fb;
+        color: #172033;
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        padding-block: 3rem;
+        padding-inline: 1.5rem;
+      }
+
+      main {
+        display: grid;
+        gap: 2rem;
+        margin-inline: auto;
+        max-width: 48rem;
+      }
+
+      section {
+        align-items: center;
+        background: #fff;
+        border: 1px solid #d9e1ec;
+        border-radius: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+
+      section h2 {
+        flex-basis: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>أزرار تدعم الاتجاه من اليمين إلى اليسار</h1>
+
+      <section aria-labelledby="group-heading">
+        <h2 id="group-heading">مجموعة أزرار</h2>
+        <div class="bb-group" role="group" aria-label="محاذاة النص">
+          <button class="bb-btn bb-ocean bb-outline bb-md" type="button">يمين</button>
+          <button class="bb-btn bb-ocean bb-outline bb-md" type="button">وسط</button>
+          <button class="bb-btn bb-ocean bb-outline bb-md" type="button">يسار</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="split-heading">
+        <h2 id="split-heading">إجراء منقسم</h2>
+        <div class="bb-split" role="group" aria-label="خيارات الحفظ">
+          <button class="bb-btn bb-emerald bb-solid bb-md" type="button">حفظ التغييرات</button>
+          <button
+            class="bb-btn bb-emerald bb-solid bb-md bb-icon-only"
+            type="button"
+            aria-label="خيارات حفظ إضافية"
+          >
+            <span class="bb-btn-icon" aria-hidden="true">⌄</span>
+          </button>
+        </div>
+      </section>
+
+      <section aria-labelledby="state-heading">
+        <h2 id="state-heading">الحالات</h2>
+        <button class="bb-btn bb-violet bb-solid bb-md bb-rounded" type="button">
+          الإشعارات <span class="bb-badge" aria-hidden="true">3</span>
+        </button>
+        <button
+          class="bb-btn bb-ocean bb-solid bb-md bb-rounded bb-loading"
+          type="button"
+          disabled
+          aria-busy="true"
+        >
+          جارٍ حفظ التغييرات
+        </button>
+      </section>
+    </main>
+  </body>
+</html>

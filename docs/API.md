@@ -98,6 +98,24 @@ All motion is disabled when `prefers-reduced-motion: reduce` is active. The show
 
 For grouped controls, add an accessible group name in application markup, for example `<div class="bb-group" role="group" aria-label="Text alignment">`.
 
+## Writing direction
+
+BetterButtons inherits the document or container writing direction. `bb-group` and `bb-split` use logical start and end edges, `bb-badge` follows the inline end, and the shine and slide effects enter from the appropriate inline side.
+
+Set `dir="rtl"` on the localized page or region whenever possible:
+
+```html
+<section lang="ar" dir="rtl">
+  <div class="bb-group" role="group" aria-label="محاذاة النص">
+    <button type="button" class="bb-btn bb-ocean bb-outline bb-md">يمين</button>
+    <button type="button" class="bb-btn bb-ocean bb-outline bb-md">وسط</button>
+    <button type="button" class="bb-btn bb-ocean bb-outline bb-md">يسار</button>
+  </div>
+</section>
+```
+
+Keep DOM order meaningful: the first child is the logical start of a group and the last child is the logical end. See the [standalone RTL example](../examples/rtl.html).
+
 ## Public tokens
 
 Themes define these custom properties: `--bb-primary`, `--bb-primary-hover`, `--bb-primary-active`, `--bb-primary-text`, `--bb-primary-light`, `--bb-primary-dark`, `--bb-primary-rgb` and `--bb-primary-gradient`.
