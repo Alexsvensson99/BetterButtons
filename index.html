@@ -983,9 +983,55 @@
               </button>
               <span class="canvas-label canvas-label-bottom">THE BUTTON IS THE PRODUCT</span>
             </div>
+            <div class="output-tools">
+              <div class="output-format-control">
+                <span class="output-tools-label" id="output-format-label">Code format</span>
+                <div class="output-format-group" role="group" aria-labelledby="output-format-label">
+                  <button
+                    class="output-format-button is-selected"
+                    type="button"
+                    data-control="format"
+                    data-value="html"
+                    aria-pressed="true"
+                  >
+                    HTML
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="react"
+                    aria-pressed="false"
+                  >
+                    React / JSX
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="vue"
+                    aria-pressed="false"
+                  >
+                    Vue
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="svelte"
+                    aria-pressed="false"
+                  >
+                    Svelte
+                  </button>
+                </div>
+              </div>
+              <button class="share-button" id="copy-share-link" type="button">
+                Copy share link <span aria-hidden="true">↗</span>
+              </button>
+            </div>
             <div class="output-card">
               <div class="output-heading">
-                <span><span class="output-dot" aria-hidden="true"></span> HTML output</span
+                <span id="output-title"><span class="output-dot" aria-hidden="true"></span> HTML output</span
                 ><button class="copy-button" id="copy-code" type="button">
                   Copy HTML <span aria-hidden="true">⌘</span>
                 </button>

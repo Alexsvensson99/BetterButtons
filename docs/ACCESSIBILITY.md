@@ -35,7 +35,7 @@ Keep the original label in the DOM so the accessible name remains useful. Announ
 
 ## Keyboard and focus
 
-The base class has a visible `:focus-visible` ring. Do not remove it without providing an equally visible replacement. Native buttons activate with Enter and Space; native links activate with Enter.
+The base class has a visible `:focus-visible` ring. `--bb-focus-ring-color` controls the ring and `--bb-focus-ring-offset-color` controls its offset surface. Do not remove either without providing an equally visible replacement. Native buttons activate with Enter and Space; native links activate with Enter.
 
 For `bb-group` or `bb-split`, give the container a group label and preserve a logical DOM and tab order.
 
@@ -55,16 +55,16 @@ Color must not be the only way to communicate state. Pair destructive, successfu
 
 The library disables animations and transitions when the operating system requests reduced motion. Avoid adding application animations that override this behavior. `bb-anim-none` is available when a control should never animate.
 
-## Verification
+## Release verification
 
-The repository runs automated axe checks and keyboard-focused browser tests. Before shipping a product integration, also test:
+The repository runs automated axe checks and keyboard-focused browser tests. Before a 2.1 release, complete and record this manual check:
 
 - keyboard-only operation;
 - browser zoom at 200% and 400%;
-- a screen reader on at least one target platform;
-- forced-colors or high-contrast mode;
-- both left-to-right and right-to-left content when the product is localized;
+- VoiceOver or another target screen reader;
+- left-to-right and right-to-left content when the product is localized;
+- a real forced-colors or high-contrast environment when one is available;
 - reduced-motion mode;
 - every custom theme on its real background.
 
-Automated testing detects only a subset of accessibility problems and is not a certification of WCAG conformance.
+This manual assistive-technology check remains a release requirement; it has not been completed by automated coverage. Automated testing detects only a subset of accessibility problems and is not a certification of WCAG conformance.

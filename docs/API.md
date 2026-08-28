@@ -122,4 +122,6 @@ Themes define these custom properties: `--bb-primary`, `--bb-primary-hover`, `--
 
 Global sizing tokens include `--bb-transition`, `--bb-radius-sm`, `--bb-radius-md`, `--bb-radius-lg`, `--bb-radius-xl`, `--bb-radius-full`, and `--bb-text-xs` through `--bb-text-2xl`.
 
+Focus tokens include `--bb-focus-ring-color` for the visible ring and `--bb-focus-ring-offset-color` for the surface between the ring and the control. Their defaults preserve the existing focus appearance; override both together when a product surface needs a different focus treatment.
+
 Treat documented classes, tokens and the style-versus-shape layer priority as the public API. Internal keyframe names and declaration order within a documented layer may change in minor releases.

@@ -34,10 +34,12 @@ Tokens inherit, so defaults can be set for a product area:
   --bb-transition: 120ms ease-out;
   --bb-radius-md: 10px;
   --bb-text-md: 1rem;
+  --bb-focus-ring-color: #1d4ed8;
+  --bb-focus-ring-offset-color: #ffffff;
 }
 ```
 
-Avoid globally changing color tokens if the same page uses multiple BetterButtons themes.
+Avoid globally changing color tokens if the same page uses multiple BetterButtons themes. Override `--bb-focus-ring-color` and `--bb-focus-ring-offset-color` together, and verify the ring against the actual surrounding surface.
 
 ## Override a component deliberately
 

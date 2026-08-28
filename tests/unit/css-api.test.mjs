@@ -77,6 +77,16 @@ test('all themes define the complete token contract', () => {
   }
 });
 
+test('focus treatment exposes stable customization tokens', () => {
+  for (const token of ['--bb-focus-ring-offset-color', '--bb-focus-ring-color']) {
+    assert.match(css, new RegExp(`${token}:`), `Focus token is missing: ${token}`);
+  }
+  const focusBlock = css.match(/\.bb-btn:focus-visible\s*\{([^}]*)\}/)?.[1];
+  assert.ok(focusBlock, 'Focus-visible block is missing');
+  assert.ok(focusBlock.includes('var(--bb-focus-ring-offset-color)'));
+  assert.ok(focusBlock.includes('var(--bb-focus-ring-color)'));
+});
+
 test('the combination claim is derived from the actual API', () => {
   const combinations =
     groups.themes.length *

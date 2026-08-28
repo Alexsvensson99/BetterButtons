@@ -82,6 +82,105 @@ test('the builder previews and exports right-to-left direction', async ({ page }
   );
 });
 
+test('the builder exports accessible HTML, React, Vue and Svelte markup', async ({ page }) => {
+  await page.getByLabel('Button label').fill('Save changes');
+  await page.getByRole('button', { name: 'Right to left', exact: true }).click();
+  await page.getByLabel('Loading state').check();
+
+  const output = page.locator('#code-output');
+  await expect(output).toContainText('class="bb-btn');
+  await expect(output).toContainText('aria-busy="true"');
+  await expect(output).toContainText('disabled');
+
+  await page.getByRole('button', { name: 'React / JSX', exact: true }).click();
+  await expect(output).toContainText("import 'betterbuttons';");
+  await expect(output).toContainText('export function BetterButton()');
+  await expect(output).toContainText('className="bb-btn');
+  await expect(output).toContainText('dir="rtl"');
+
+  await page.getByRole('button', { name: 'Vue', exact: true }).click();
+  await expect(output).toContainText('<script setup>');
+  await expect(output).toContainText('<template>');
+  await expect(output).toContainText('class="bb-btn');
+
+  await page.getByRole('button', { name: 'Svelte', exact: true }).click();
+  await expect(output).toContainText('<script>');
+  await expect(output).toContainText("import 'betterbuttons';");
+  await expect(output).toContainText('Save changes');
+  await expect(page.locator('#output-title')).toHaveText('Svelte output');
+});
+
+test('share links restore a validated complete builder configuration', async ({ page }) => {
+  await page.evaluate(() => window.history.replaceState(null, '', '/?campaign=local-preview'));
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (value) => {
+          window.__betterButtonsCopiedText = value;
+        }
+      }
+    });
+  });
+  await page.getByLabel('Button label').fill('مرحبا');
+  await page.getByLabel('Violet theme').click();
+  await page.getByRole('button', { name: 'Gradient', exact: true }).click();
+  await page.getByLabel('Button size').selectOption('bb-xl');
+  await page.getByRole('button', { name: 'Right to left', exact: true }).click();
+  await page.getByLabel('Lifted shadow').check();
+  await page.getByRole('button', { name: 'React / JSX', exact: true }).click();
+  await page.getByRole('button', { name: 'Copy share link', exact: true }).click();
+
+  const shareUrl = await page.evaluate(() => window.__betterButtonsCopiedText);
+  expect(shareUrl).toContain('#builder?');
+  expect(shareUrl).toContain('v=1');
+  expect(new URL(shareUrl).search).toBe('');
+  await page.goto(shareUrl);
+  await page.reload();
+
+  const preview = page.locator('#builder-preview-button');
+  await expect(preview).toHaveText(/مرحبا/);
+  await expect(preview).toHaveClass(/bb-violet/);
+  await expect(preview).toHaveClass(/bb-gradient/);
+  await expect(preview).toHaveClass(/bb-xl/);
+  await expect(preview).toHaveClass(/bb-shadow/);
+  await expect(preview).toHaveAttribute('dir', 'rtl');
+  await expect(page.getByRole('button', { name: 'React / JSX', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true'
+  );
+  await expect(page.locator('#copy-status')).toHaveText('Shared configuration loaded.');
+
+  await page.getByLabel('Button size').selectOption('bb-sm');
+  await expect(page).toHaveURL(/#builder$/);
+});
+
+test('share links reject unknown classes and escape shared labels', async ({ page }) => {
+  const parameters = new URLSearchParams({
+    v: '1',
+    theme: 'bb-injected',
+    style: 'bb-solid',
+    size: 'bb-lg',
+    shape: 'bb-pill',
+    direction: 'ltr',
+    animation: 'bb-anim-none',
+    format: 'html',
+    shadow: '0',
+    loading: '0',
+    block: '0',
+    motionReduced: '0',
+    label: '<img src=x onerror=alert(1)>'
+  });
+  await page.goto(`/#builder?${parameters}`);
+  await page.reload();
+
+  const preview = page.locator('#builder-preview-button');
+  await expect(preview).toHaveClass(/bb-ocean/);
+  await expect(preview).not.toHaveClass(/bb-injected/);
+  await expect(page.locator('#code-output')).toContainText('&lt;img src=x onerror=alert(1)&gt;');
+  await expect(page.locator('#code-output img')).toHaveCount(0);
+});
+
 test('explicit shapes have stable priority over style geometry', async ({ page }) => {
   await page.getByRole('button', { name: 'Flat', exact: true }).click();
   await page.getByLabel('Button shape').selectOption('bb-pill');

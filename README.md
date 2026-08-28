@@ -7,6 +7,8 @@
 
 BetterButtons is a dependency-free CSS button system with an accessible visual builder. Combine 20 themes, 12 styles, 6 sizes, 4 shapes and 10 motion options into up to 57,600 core class combinations, then copy production-ready HTML. The builder adapts markup for combinations such as icon-only circles.
 
+The 2.1 candidate builder can reset its choices, copy a shareable URL fragment and export semantic HTML, React/JSX, Vue or Svelte markup. The fragment stays local to the URL rather than becoming a server query; a custom button label is included only when you explicitly copy a share link.
+
 The library has no runtime JavaScript and no framework dependency. The JavaScript in this repository powers only the documentation showcase and builder.
 
 ## Quick start

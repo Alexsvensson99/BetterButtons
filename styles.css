@@ -1411,6 +1411,91 @@ html.theme-light .style-card:hover {
   z-index: 1;
 }
 
+.output-tools {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  min-height: 31px;
+}
+
+.output-format-control {
+  align-items: center;
+  display: flex;
+  gap: 9px;
+  min-width: 0;
+}
+
+.output-tools-label {
+  color: var(--muted);
+  flex: none;
+  font-size: 0.63rem;
+  font-weight: 700;
+}
+
+.output-format-group {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.output-format-button,
+.share-button {
+  cursor: pointer;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.output-format-button {
+  background: transparent;
+  border: 0;
+  border-inline-start: 1px solid var(--line);
+  color: var(--muted);
+  padding: 7px 9px;
+  white-space: nowrap;
+}
+
+.output-format-button:first-child {
+  border-inline-start: 0;
+}
+
+.output-format-button:hover {
+  color: var(--text);
+}
+
+.output-format-button.is-selected {
+  background: rgba(79, 134, 255, 0.14);
+  color: var(--text);
+}
+
+.share-button {
+  background: transparent;
+  border: 0;
+  color: var(--muted-strong);
+  flex: none;
+  padding: 7px 0;
+}
+
+.share-button:hover {
+  color: var(--text);
+}
+
+.share-button span {
+  color: var(--lime-text);
+  margin-inline-start: 3px;
+}
+
+.output-format-button:focus-visible,
+.share-button:focus-visible,
+.copy-button:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
 .canvas-label {
   color: #657487;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -2006,6 +2091,34 @@ html.theme-light .code-block {
 
   .code-block {
     font-size: 0.65rem;
+  }
+
+  .output-tools,
+  .output-format-control {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .output-format-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .output-format-button {
+    border-block-start: 1px solid var(--line);
+    border-inline-start: 0;
+  }
+
+  .output-format-button:nth-child(-n + 2) {
+    border-block-start: 0;
+  }
+
+  .output-format-button:nth-child(even) {
+    border-inline-start: 1px solid var(--line);
+  }
+
+  .share-button {
+    align-self: flex-start;
   }
 
   .output-footer {

@@ -94,6 +94,19 @@ test('the builder exposes the complete documented matrix', () => {
   assert.equal([...html.matchAll(/<option value="bb-(?:xs|sm|md|lg|xl|2xl)"/g)].length, 6);
   assert.equal([...html.matchAll(/<option value="bb-(?:rounded|pill|square|circle)"/g)].length, 4);
   assert.equal([...html.matchAll(/data-control="direction"/g)].length, 2);
+  assert.equal([...html.matchAll(/data-control="format"/g)].length, 4);
+});
+
+test('the builder offers framework output and fragment-based sharing', () => {
+  for (const format of ['html', 'react', 'vue', 'svelte']) {
+    assert.match(html, new RegExp(`data-control="format"[\\s\\S]*?data-value="${format}"`));
+  }
+  assert.match(html, /id="copy-share-link"/);
+  assert.match(app, /#builder\?/);
+  assert.match(app, /URLSearchParams/);
+  assert.match(app, /React \/ JSX/);
+  assert.match(app, /<template>/);
+  assert.match(app, /import 'betterbuttons';/);
 });
 
 test('the saved theme is applied before showcase styles load', () => {

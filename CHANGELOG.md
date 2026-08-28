@@ -11,6 +11,10 @@ All notable changes to BetterButtons are documented here. The project follows [S
 - Copyable React, Vue and Svelte integration examples that preserve native button and accessible loading semantics.
 - A standalone Arabic RTL example plus a direction control in the visual builder.
 - Automated contracts for logical geometry, RTL rendering and expanded forced-colors states.
+- Shareable builder configurations stored in a URL fragment, with reset and Copy share link controls. The copied fragment stays local to the URL and includes a custom label only when explicitly copied.
+- Semantic builder exports for HTML, React/JSX, Vue and Svelte.
+- Public `--bb-focus-ring-color` and `--bb-focus-ring-offset-color` tokens with unchanged default focus styling.
+- A dedicated RTL visual regression and a documented manual 2.1 release check for keyboard, zoom, screen reader, direction and real forced-colors or high-contrast coverage when available.
 
 ### Changed
 

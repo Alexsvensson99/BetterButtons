@@ -33,8 +33,8 @@
   }
 
   .bb-btn:focus-visible {
-    box-shadow: 0 0 0 3px #0b0e13e6,
-      0 0 0 6px rgba(var(--bb-primary-rgb), .85);
+    box-shadow: 0 0 0 3px var(--bb-focus-ring-offset-color),
+      0 0 0 6px var(--bb-focus-ring-color);
     outline: none;
   }
 
@@ -865,6 +865,8 @@
   --bb-primary-dark: #1f4fb8;
   --bb-primary-rgb: 79, 134, 255;
   --bb-primary-gradient: linear-gradient(135deg, #4f86ff, #315bd8);
+  --bb-focus-ring-offset-color: #0b0e13e6;
+  --bb-focus-ring-color: rgba(var(--bb-primary-rgb), .85);
   --bb-transition: .18s cubic-bezier(.2, .8, .2, 1);
   --bb-radius-sm: 8px;
   --bb-radius-md: 12px;

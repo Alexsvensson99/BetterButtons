@@ -4,8 +4,8 @@ The roadmap describes direction, not a delivery promise. Priorities can change b
 
 ## Now
 
-- Stabilize the backward-compatible 2.1 integration and writing-direction candidate.
-- Complete a manual assistive-technology pass for forced-colors, high-contrast and mixed-direction content before release.
+- Stabilize the backward-compatible 2.1 builder sharing, export and writing-direction candidate.
+- Complete and record the manual 2.1 release check for keyboard, zoom, VoiceOver or another target screen reader, direction, and real forced-colors or high-contrast coverage when available.
 - Maintain repeatable accessibility, responsive, visual regression, package and commit-identity checks.
 - Keep the live visual builder and npm documentation aligned with the packaged CSS API.
 
@@ -31,5 +31,6 @@ The roadmap describes direction, not a delivery promise. Priorities can change b
 - Added logical group, split, badge and loading geometry plus direction-aware motion.
 - Added builder RTL preview/export and a semantic Arabic integration example.
 - Expanded automated forced-colors, high-contrast, RTL and accessibility coverage.
+- Added candidate support for fragment-based builder sharing, reset, semantic framework exports and configurable focus-ring tokens.
 
 Propose roadmap changes through a feature issue with a concrete user need and maintenance impact.
