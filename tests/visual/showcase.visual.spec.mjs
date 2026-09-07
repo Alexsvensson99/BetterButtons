@@ -57,6 +57,46 @@ test('configured builder and focus treatment remain stable', async ({ page }) =>
   await expect(page.locator('.output-card')).toHaveScreenshot('builder-output-violet.png');
 });
 
+test('right-to-left builder geometry remains stable', async ({ page }) => {
+  await openShowcase(page, { viewport: { width: 1440, height: 1100 } });
+  await page.getByLabel('Button label').fill('واجهة عربية');
+  await page.getByLabel('Violet theme').click();
+  await page.getByRole('button', { name: 'Gradient', exact: true }).click();
+  await page.getByRole('button', { name: 'Right to left', exact: true }).click();
+  await page.getByRole('button', { name: 'None', exact: true }).click();
+  await page.addStyleTag({
+    content: `
+      .topbar { display: none !important; }
+      .canvas-label { visibility: hidden !important; }
+      #builder-preview-button { width: 220px !important; }
+      #builder-preview-button .preview-label {
+        background: #fff !important;
+        border-radius: 999px !important;
+        color: transparent !important;
+        display: block !important;
+        font-size: 0 !important;
+        height: 8px !important;
+        width: 82px !important;
+      }
+      #builder-preview-button .bb-btn-icon {
+        background: #fff !important;
+        border-radius: 50% !important;
+        height: 14px !important;
+        width: 14px !important;
+      }
+      #builder-preview-button .bb-btn-icon svg { display: none !important; }
+    `
+  });
+
+  const preview = page.locator('#builder-preview-button');
+  const labelBox = await preview.locator('.preview-label').boundingBox();
+  const iconBox = await preview.locator('.bb-btn-icon').boundingBox();
+  expect(iconBox.x).toBeLessThan(labelBox.x);
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('#preview-canvas')).toHaveScreenshot('builder-rtl-geometry.png');
+});
+
 test('mobile menu and hero remain stable', async ({ page }) => {
   await openShowcase(page, { viewport: mobile });
   const menu = page.locator('#menu-toggle');

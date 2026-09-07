@@ -34,10 +34,12 @@ Tokens inherit, so defaults can be set for a product area:
   --bb-transition: 120ms ease-out;
   --bb-radius-md: 10px;
   --bb-text-md: 1rem;
+  --bb-focus-ring-color: #1d4ed8;
+  --bb-focus-ring-offset-color: #ffffff;
 }
 ```
 
-Avoid globally changing color tokens if the same page uses multiple BetterButtons themes.
+Avoid globally changing color tokens if the same page uses multiple BetterButtons themes. Override `--bb-focus-ring-color` and `--bb-focus-ring-offset-color` together, and verify the ring against the actual surrounding surface.
 
 ## Override a component deliberately
 
@@ -51,6 +53,8 @@ The source uses cascade layers. Application CSS that is not in a layer and loads
 ```
 
 Prefer a product-specific class over targeting generated class combinations. Do not depend on internal keyframe names or stylesheet declaration order.
+
+Use logical properties such as `padding-inline`, `margin-inline-start` and `border-start-start-radius` for product overrides that must follow writing direction. BetterButtons inherits `dir` and does not require a separate RTL stylesheet.
 
 ## Keep customizations accessible
 

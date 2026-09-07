@@ -6,12 +6,29 @@ All notable changes to BetterButtons are documented here. The project follows [S
 
 ### Added
 
+- Real React, Vue and Svelte compiler-and-renderer security contracts for generated builder components.
 - A maintainer-specific commit-identity privacy check that blocks non-noreply author or committer metadata without echoing rejected addresses.
 - A canonical HTTPS link to the live visual builder in the public README and package metadata.
+- Copyable React, Vue and Svelte integration examples that preserve native button and accessible loading semantics.
+- A standalone Arabic RTL example plus a direction control in the visual builder.
+- Automated contracts for logical geometry, RTL rendering and expanded forced-colors states.
+- Shareable builder configurations stored in a URL fragment, with reset and Copy share link controls. The copied fragment stays local to the URL and includes a custom label only when explicitly copied.
+- Semantic builder exports for HTML, React/JSX, Vue and Svelte.
+- Public `--bb-focus-ring-color` and `--bb-focus-ring-offset-color` tokens with unchanged default focus styling.
+- A dedicated RTL visual regression and a documented manual 2.1 release check for keyboard, zoom, screen reader, direction and real forced-colors or high-contrast coverage when available.
 
 ### Changed
 
+- Restricted npm OIDC authority to a minimal publish job, added tag-to-main ancestry binding, immediate pre-publish rehashing and an exact seven-file package allowlist.
+- Normalized the maintainer's documented name and GitHub-handle aliases in the commit-identity privacy guard without storing a personal address.
 - Updated launch, release, contribution and roadmap documentation for the completed 2.0 publication.
+- Replaced physical group, split, badge and loading geometry with writing-mode-aware logical properties.
+- Mirrored directional shine and slide motion in right-to-left contexts.
+- Strengthened control borders, focus treatment, disabled states, badges and loading indicators for increased-contrast and forced-colors preferences.
+
+### Fixed
+
+- Serialized custom builder labels as inert target-language data so copied React, Vue and Svelte components cannot interpret label text as framework expressions or script content.
 
 ## [2.0.0] - 2026-08-24
 

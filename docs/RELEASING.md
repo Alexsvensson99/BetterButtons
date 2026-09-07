@@ -23,8 +23,9 @@ Removing or renaming a documented class or token, changing its meaning, or chang
 4. Push the tag and wait for the package workflow to validate it, run the full quality suite, then build the tarball, checksum and CycloneDX SBOM with the pinned npm CLI.
 5. Download the artifact, verify `SHA256SUMS`, inspect the tarball and copy its lowercase SHA-256 value.
 6. Confirm the repository is public and the protected `npm-production` environment is configured with a required review before registry publication.
-7. Dispatch `publish.yml` from the exact tag with the reviewed SHA-256 value. The job rebuilds the tarball, rejects a hash mismatch, checks `BETTERBUTTONS_PUBLISH=v<version>` and publishes that inspected tarball with provenance.
-8. Create a GitHub release from the same tag, attach the inspected tarball, checksum and SBOM, and paste the matching changelog notes.
+7. Dispatch `publish.yml` from the exact tag with the reviewed SHA-256 value. Its read-only verification job requires the peeled tag commit to be on `main`, checks the release metadata and exact packed-file allowlist, rebuilds the tarball, rejects a hash mismatch and transfers only the verified package plus the version- and SHA-256-pinned npm CLI to the protected publish job.
+8. Approve the `npm-production` environment. The minimal publish job has no source checkout or dependency install: it verifies the tarball version binding, rehashes the one regular tarball immediately before publication and publishes it with short-lived OIDC credentials and provenance.
+9. Create a GitHub release from the same tag, attach the inspected tarball, checksum and SBOM, and paste the matching changelog notes.
 
 Do not publish from an unreviewed branch, bypass failing checks or reuse a version that reached a registry.
 
@@ -33,7 +34,8 @@ Do not publish from an unreviewed branch, bypass failing checks or reuse a versi
 BetterButtons publishes through npm Trusted Publishing. The workflow receives a short-lived OIDC credential from GitHub Actions and contains no npm access token.
 
 - npm trusts only `Alexsvensson99/BetterButtons`, workflow `publish.yml`, environment `npm-production` and the `npm publish` action.
-- The workflow retains `id-token: write`, runs on a GitHub-hosted runner and invokes `npm publish` directly.
+- Only the final protected publish job receives `id-token: write`; the checkout, dependency installation, tests, package inspection and artifact construction run in a separate read-only job.
+- The final job runs on a GitHub-hosted runner, downloads the same-run verified artifact, rejects extra files, verifies both archive digests before executing anything from them, executes no repository scripts, rechecks the package immediately before publication, and invokes the reviewed npm CLI directly.
 - The protected `npm-production` environment requires maintainer approval before publication.
 - Package publishing requires 2FA and disallows bypass-2FA tokens.
 - No `NPM_TOKEN` repository or environment secret is required.

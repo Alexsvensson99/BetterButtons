@@ -4,18 +4,28 @@ import { fileURLToPath } from 'node:url';
 
 export const APPROVED_MAINTAINER_EMAIL = '25175104+Alexsvensson99@users.noreply.github.com';
 export const MAINTAINER_NAME = 'Alexander Svensson';
+export const MAINTAINER_NAME_ALIASES = Object.freeze([MAINTAINER_NAME, 'Alexsvensson99']);
 
 const ZERO_SHA = '0000000000000000000000000000000000000000';
+const normalizedMaintainerAliases = new Set(MAINTAINER_NAME_ALIASES.map(normalizeIdentityName));
+
+export function normalizeIdentityName(value) {
+  return String(value).normalize('NFKC').trim().replace(/\s+/gu, ' ').toLocaleLowerCase('en-US');
+}
+
+function isMaintainerName(value) {
+  return normalizedMaintainerAliases.has(normalizeIdentityName(value));
+}
 
 export function findIdentityViolations({ authorEmail, authorName, committerEmail, committerName }) {
   const approvedEmail = APPROVED_MAINTAINER_EMAIL.toLowerCase();
   const violations = [];
 
-  if (authorName === MAINTAINER_NAME && authorEmail.toLowerCase() !== approvedEmail) {
+  if (isMaintainerName(authorName) && authorEmail.toLowerCase() !== approvedEmail) {
     violations.push('author');
   }
 
-  if (committerName === MAINTAINER_NAME && committerEmail.toLowerCase() !== approvedEmail) {
+  if (isMaintainerName(committerName) && committerEmail.toLowerCase() !== approvedEmail) {
     violations.push('committer');
   }
 

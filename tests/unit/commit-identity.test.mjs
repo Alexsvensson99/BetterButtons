@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { APPROVED_MAINTAINER_EMAIL, findIdentityViolations } from '../../scripts/check-commit-identities.mjs';
+import {
+  APPROVED_MAINTAINER_EMAIL,
+  findIdentityViolations,
+  normalizeIdentityName
+} from '../../scripts/check-commit-identities.mjs';
 
 test('commit identity check accepts the approved maintainer noreply address', () => {
   assert.deepEqual(
@@ -36,6 +40,19 @@ test('commit identity check rejects a non-noreply maintainer committer', () => {
       committerEmail: 'private@example.invalid'
     }),
     ['committer']
+  );
+});
+
+test('commit identity check normalizes known maintainer aliases', () => {
+  assert.equal(normalizeIdentityName('  ALEXANDER   SVENSSON  '), 'alexander svensson');
+  assert.deepEqual(
+    findIdentityViolations({
+      authorName: '  ALEXANDER   SVENSSON  ',
+      authorEmail: 'private@example.invalid',
+      committerName: 'Ａｌｅｘｓｖｅｎｓｓｏｎ９９',
+      committerEmail: 'private@example.invalid'
+    }),
+    ['author', 'committer']
   );
 });
 

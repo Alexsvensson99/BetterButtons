@@ -7,6 +7,8 @@
 
 BetterButtons is a dependency-free CSS button system with an accessible visual builder. Combine 20 themes, 12 styles, 6 sizes, 4 shapes and 10 motion options into up to 57,600 core class combinations, then copy production-ready HTML. The builder adapts markup for combinations such as icon-only circles.
 
+The 2.1 candidate builder can reset its choices, copy a shareable URL fragment and export semantic HTML, React/JSX, Vue or Svelte markup. The fragment stays local to the URL rather than becoming a server query; a custom button label is included only when you explicitly copy a share link.
+
 The library has no runtime JavaScript and no framework dependency. The JavaScript in this repository powers only the documentation showcase and builder.
 
 ## Quick start
@@ -53,7 +55,13 @@ Every button starts with `bb-btn`. Add one class from each family:
 | Motion  | Optional    | `bb-anim-shine`, `bb-anim-glow`, `bb-anim-none`   |
 | Utility | Optional    | `bb-shadow`, `bb-block`, `bb-loading`             |
 
-See the complete [CSS API](docs/API.md), [customization guide](docs/CUSTOMIZATION.md), [browser support](docs/BROWSER_SUPPORT.md) and [accessibility guidance](docs/ACCESSIBILITY.md).
+See the complete [CSS API](docs/API.md), [framework integrations](docs/FRAMEWORKS.md), [customization guide](docs/CUSTOMIZATION.md), [browser support](docs/BROWSER_SUPPORT.md) and [accessibility guidance](docs/ACCESSIBILITY.md).
+
+## Framework integrations
+
+BetterButtons uses the same semantic HTML in every framework. Import `betterbuttons` once, then compose classes directly on native buttons or links—no adapter or client-side initialization is required.
+
+Copy the maintained [React](examples/frameworks/react.md), [Vue](examples/frameworks/vue.md) or [Svelte](examples/frameworks/svelte.md) example, or read the complete [framework integration guide](docs/FRAMEWORKS.md). The standalone [RTL example](examples/rtl.html) demonstrates direction-aware groups, split actions, badges and loading states.
 
 ## Accessible defaults
 

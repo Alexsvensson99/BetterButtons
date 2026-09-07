@@ -16,7 +16,9 @@ async function createFixture(t) {
   const parent = await mkdtemp(join(tmpdir(), 'betterbuttons-serve-'));
   const fixtureRoot = join(parent, 'root');
   await mkdir(fixtureRoot);
+  await mkdir(join(fixtureRoot, 'examples'));
   await writeFile(join(fixtureRoot, 'index.html'), '<h1>BetterButtons</h1>');
+  await writeFile(join(fixtureRoot, 'examples', 'rtl.html'), '<html lang="ar" dir="rtl"></html>');
   await writeFile(join(fixtureRoot, 'styles.css'), 'body { color: black; }');
   t.after(() => rm(parent, { force: true, recursive: true }));
   return { fixtureRoot, parent };
@@ -78,6 +80,10 @@ test('the resolver exposes only canonical public files', async (t) => {
   assert.equal(
     await resolveRequestPath('/styles.css', fixtureRoot),
     await realpath(join(fixtureRoot, 'styles.css'))
+  );
+  assert.equal(
+    await resolveRequestPath('/examples/rtl.html', fixtureRoot),
+    await realpath(join(fixtureRoot, 'examples', 'rtl.html'))
   );
   assert.equal(await resolveRequestPath('/.git/config', fixtureRoot), null);
   assert.equal(await resolveRequestPath('/package.json', fixtureRoot), null);

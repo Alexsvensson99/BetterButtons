@@ -8,11 +8,13 @@ const modulePath = fileURLToPath(import.meta.url);
 const root = resolve(join(dirname(modulePath), '..'));
 const publicFiles = new Set([
   'app.js',
+  'builder-output.js',
   'button-library.css',
   'dist/betterbuttons.css',
   'dist/betterbuttons.min.css',
   'dist/manifest.json',
   'examples/quick-start.html',
+  'examples/rtl.html',
   'favicon.svg',
   'index.html',
   'styles.css',

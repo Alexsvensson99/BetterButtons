@@ -811,6 +811,30 @@
             </fieldset>
 
             <fieldset class="control-fieldset">
+              <legend>Text direction <span>RTL-ready</span></legend>
+              <div class="choice-grid choice-grid-two">
+                <button
+                  class="choice-button is-selected"
+                  type="button"
+                  data-control="direction"
+                  data-value="ltr"
+                  aria-pressed="true"
+                >
+                  Left to right
+                </button>
+                <button
+                  class="choice-button"
+                  type="button"
+                  data-control="direction"
+                  data-value="rtl"
+                  aria-pressed="false"
+                >
+                  Right to left
+                </button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-fieldset">
               <legend>Motion</legend>
               <div class="choice-grid choice-grid-four">
                 <button
@@ -959,9 +983,55 @@
               </button>
               <span class="canvas-label canvas-label-bottom">THE BUTTON IS THE PRODUCT</span>
             </div>
+            <div class="output-tools">
+              <div class="output-format-control">
+                <span class="output-tools-label" id="output-format-label">Code format</span>
+                <div class="output-format-group" role="group" aria-labelledby="output-format-label">
+                  <button
+                    class="output-format-button is-selected"
+                    type="button"
+                    data-control="format"
+                    data-value="html"
+                    aria-pressed="true"
+                  >
+                    HTML
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="react"
+                    aria-pressed="false"
+                  >
+                    React / JSX
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="vue"
+                    aria-pressed="false"
+                  >
+                    Vue
+                  </button>
+                  <button
+                    class="output-format-button"
+                    type="button"
+                    data-control="format"
+                    data-value="svelte"
+                    aria-pressed="false"
+                  >
+                    Svelte
+                  </button>
+                </div>
+              </div>
+              <button class="share-button" id="copy-share-link" type="button">
+                Copy share link <span aria-hidden="true">↗</span>
+              </button>
+            </div>
             <div class="output-card">
               <div class="output-heading">
-                <span><span class="output-dot" aria-hidden="true"></span> HTML output</span
+                <span id="output-title"><span class="output-dot" aria-hidden="true"></span> HTML output</span
                 ><button class="copy-button" id="copy-code" type="button">
                   Copy HTML <span aria-hidden="true">⌘</span>
                 </button>
@@ -1051,6 +1121,7 @@
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="builder-output.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>

@@ -1,15 +1,10 @@
-const state = {
-  theme: 'bb-ocean',
-  style: 'bb-solid',
-  size: 'bb-lg',
-  shape: 'bb-pill',
-  animation: 'bb-anim-shine',
-  shadow: false,
-  loading: false,
-  block: false,
-  motionReduced: false,
-  label: 'Make it better'
-};
+const {
+  ARROW_ICON: arrowIcon,
+  DEFAULT_CONFIGURATION,
+  createButtonMarkup,
+  currentClasses
+} = globalThis.BetterButtonsBuilderOutput;
+const state = { ...DEFAULT_CONFIGURATION };
 
 const defaults = { ...state };
 const themeNames = {
@@ -34,44 +29,70 @@ const themeNames = {
   'bb-teal': 'Teal',
   'bb-violet': 'Violet'
 };
+const outputFormatNames = {
+  html: 'HTML',
+  react: 'React / JSX',
+  vue: 'Vue',
+  svelte: 'Svelte'
+};
+const sharedValueKeys = ['theme', 'style', 'size', 'shape', 'direction', 'animation', 'format'];
+const sharedBooleanKeys = ['shadow', 'loading', 'block', 'motionReduced'];
 
-const arrowIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 4l4 4-4 4"></path></svg>';
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 
-function escapeHtml(value) {
-  return String(value).replace(
-    /[&<>'"]/g,
-    (character) =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      })[character]
+function buttonMarkup(format = state.format) {
+  return createButtonMarkup(state, format);
+}
+
+function allowedControlValues(key) {
+  return new Set(
+    $$(`[data-control="${key}"]`).flatMap((control) =>
+      control.tagName === 'SELECT'
+        ? [...control.options].map((option) => option.value)
+        : [control.dataset.value].filter(Boolean)
+    )
   );
 }
 
-function currentClasses() {
-  const classes = ['bb-btn', state.theme, state.style, state.size, state.shape, state.animation];
-  if (state.shape === 'bb-circle') classes.push('bb-icon-only');
-  if (state.shadow) classes.push('bb-shadow');
-  if (state.loading) classes.push('bb-loading');
-  if (state.block && state.shape !== 'bb-circle') classes.push('bb-block');
-  return classes;
+function restoreSharedConfiguration() {
+  const prefix = '#builder?';
+  if (!window.location.hash.startsWith(prefix)) return false;
+  const parameters = new URLSearchParams(window.location.hash.slice(prefix.length));
+  if (parameters.get('v') !== '1') return false;
+
+  for (const key of sharedValueKeys) {
+    const value = parameters.get(key);
+    if (value && allowedControlValues(key).has(value)) state[key] = value;
+  }
+  for (const key of sharedBooleanKeys) {
+    const value = parameters.get(key);
+    if (value === '0' || value === '1') state[key] = value === '1';
+  }
+  if (parameters.has('label')) {
+    const maxLength = Number($('#button-label')?.maxLength) || 28;
+    state.label = parameters.get('label').slice(0, maxLength);
+  }
+  return true;
 }
 
-function buttonMarkup() {
-  const label = escapeHtml(state.label.trim() || 'Button');
-  const attributes = ['type="button"', `class="${currentClasses().join(' ')}"`];
-  if (state.shape === 'bb-circle') attributes.push(`aria-label="${label}"`);
-  if (state.loading) attributes.push('aria-busy="true"', 'disabled');
-  const content =
-    state.shape === 'bb-circle'
-      ? `<span class="bb-btn-icon" aria-hidden="true">${arrowIcon}</span>`
-      : `${label} <span class="bb-btn-icon" aria-hidden="true">${arrowIcon}</span>`;
-  return `<button ${attributes.join(' ')}>\n  ${content}\n</button>`;
+function sharedConfigurationUrl() {
+  const parameters = new URLSearchParams({ v: '1' });
+  for (const key of sharedValueKeys) parameters.set(key, state[key]);
+  for (const key of sharedBooleanKeys) parameters.set(key, state[key] ? '1' : '0');
+  parameters.set('label', state.label);
+
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.hash = `builder?${parameters.toString()}`;
+  return url.toString();
+}
+
+function clearSharedConfiguration() {
+  if (!window.location.hash.startsWith('#builder?')) return;
+  const url = new URL(window.location.href);
+  url.hash = 'builder';
+  window.history.replaceState(null, '', url.toString());
 }
 
 function updateBuilder() {
@@ -79,7 +100,8 @@ function updateBuilder() {
   const code = $('#code-output');
   if (!preview || !code) return;
 
-  preview.className = currentClasses().join(' ');
+  preview.className = currentClasses(state).join(' ');
+  preview.dir = state.direction;
   preview.setAttribute('aria-label', state.label.trim() || 'Button');
   preview.disabled = state.loading;
   if (state.loading) preview.setAttribute('aria-busy', 'true');
@@ -92,6 +114,15 @@ function updateBuilder() {
   }
   code.textContent = buttonMarkup();
   $('#theme-value').textContent = themeNames[state.theme] || 'Custom';
+  const formatName = outputFormatNames[state.format] || outputFormatNames.html;
+  const outputTitleNode = $('#output-title').lastChild;
+  const copyCodeNode = $('#copy-code').firstChild;
+  if (outputTitleNode.textContent.trim() !== `${formatName} output`) {
+    outputTitleNode.textContent = ` ${formatName} output`;
+  }
+  if (copyCodeNode.textContent.trim() !== `Copy ${formatName}`) {
+    copyCodeNode.textContent = `Copy ${formatName} `;
+  }
   document.documentElement.dataset.reducedMotion = String(state.motionReduced);
   updateControlStates();
 }
@@ -196,6 +227,9 @@ function initMenu() {
 }
 
 function initBuilder() {
+  const restored = restoreSharedConfiguration();
+  $('#button-label').value = state.label;
+
   $$('[data-control]').forEach((control) => {
     const eventName = control.type === 'checkbox' || control.tagName === 'SELECT' ? 'change' : 'click';
     control.addEventListener(eventName, () => {
@@ -205,34 +239,48 @@ function initBuilder() {
       } else {
         state[key] = control.tagName === 'SELECT' ? control.value : control.dataset.value;
       }
+      clearSharedConfiguration();
       updateBuilder();
     });
   });
 
   $('#button-label')?.addEventListener('input', (event) => {
     state.label = event.target.value;
+    clearSharedConfiguration();
     updateBuilder();
   });
 
-  $('#copy-code')?.addEventListener('click', async (event) => {
-    const copied = await copyText(buttonMarkup(), 'HTML copied to clipboard');
+  $('#copy-code')?.addEventListener('click', async () => {
+    const formatName = outputFormatNames[state.format] || outputFormatNames.html;
+    const copied = await copyText(buttonMarkup(), `${formatName} copied to clipboard`);
     if (copied) {
-      event.currentTarget.firstChild.textContent = 'Copied ';
+      $('#copy-code').firstChild.textContent = 'Copied ';
       window.setTimeout(() => {
-        event.currentTarget.firstChild.textContent = 'Copy HTML ';
+        $('#copy-code').firstChild.textContent =
+          `Copy ${outputFormatNames[state.format] || outputFormatNames.html} `;
       }, 1800);
       $('#copy-status').textContent = 'Ready to paste into your project.';
     }
   });
 
+  $('#copy-share-link')?.addEventListener('click', async () => {
+    const copied = await copyText(sharedConfigurationUrl(), 'Share link copied to clipboard');
+    if (copied) $('#copy-status').textContent = 'The complete builder configuration is in the link.';
+  });
+
   $('#reset-builder')?.addEventListener('click', () => {
     Object.assign(state, defaults);
     $('#button-label').value = state.label;
+    clearSharedConfiguration();
     updateBuilder();
     showToast('Builder reset');
   });
 
   updateBuilder();
+  if (restored) {
+    $('#copy-status').textContent = 'Shared configuration loaded.';
+    window.requestAnimationFrame(() => $('#builder')?.scrollIntoView({ behavior: 'auto', block: 'start' }));
+  }
 }
 
 function initGallery() {

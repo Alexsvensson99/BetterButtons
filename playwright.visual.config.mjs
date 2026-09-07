@@ -1,10 +1,14 @@
 import { defineConfig } from '@playwright/test';
 import { fileURLToPath } from 'node:url';
+import { assertBrowserLaunchAllowed } from './scripts/playwright-preflight.mjs';
 
 const screenshotStylePath = fileURLToPath(new URL('./tests/visual/screenshot.css', import.meta.url));
 
+assertBrowserLaunchAllowed();
+
 export default defineConfig({
   testDir: './tests/visual',
+  globalSetup: './scripts/playwright-preflight.mjs',
   outputDir: './test-results/visual',
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),

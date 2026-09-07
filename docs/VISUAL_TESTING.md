@@ -4,15 +4,16 @@ BetterButtons uses a dedicated Chromium screenshot suite to detect visual drift 
 
 ## Covered surfaces
 
-The committed baselines cover five representative states:
+The committed baselines cover six representative states:
 
 - the dark desktop launch surface;
 - the light desktop gallery and style cards;
 - a configured builder preview with keyboard focus;
 - the open mobile navigation and hero at 390 by 844 pixels;
 - the focused preview surface in forced-colors mode.
+- a dedicated right-to-left builder surface.
 
-These snapshots protect layout, theme surfaces, representative button combinations, responsive navigation and focus treatment. They complement rather than replace accessibility assertions and manual review.
+These snapshots protect layout, theme surfaces, representative button combinations, responsive navigation, focus treatment and RTL geometry. They complement rather than replace accessibility assertions and manual review.
 
 ## Run the suite
 
@@ -46,3 +47,7 @@ Never accept snapshots only because a command produced them. For every intended 
 When a Linux baseline is missing, CI fails safely and uploads `tests/visual/__screenshots__/`, `test-results/` and the Playwright report in the `playwright-failure` artifact. Download and inspect those candidates before committing them; never make CI update repository baselines automatically.
 
 Large design changes still require explicit owner approval before their new baselines are accepted.
+
+## Manual release check
+
+Before releasing the 2.1 candidate, manually check keyboard operation, 200% and 400% zoom, VoiceOver or another target screen reader, left-to-right and right-to-left content, and a real forced-colors or high-contrast environment when available. Record the environment and result separately; an emulated browser mode or a visual baseline does not complete this check.
