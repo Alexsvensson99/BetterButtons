@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { verifyPackageFileSet } from './package-files.mjs';
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'betterbuttons-pack-'));
 const isolatedCache = join(temporaryDirectory, 'npm-cache');
@@ -33,26 +35,7 @@ try {
     root
   );
   const [pack] = JSON.parse(output);
-  const filePaths = new Set(pack.files.map((file) => file.path));
-  const required = [
-    'LICENSE',
-    'README.md',
-    'button-library.css',
-    'dist/betterbuttons.css',
-    'dist/betterbuttons.min.css',
-    'dist/manifest.json',
-    'package.json'
-  ];
-  const forbiddenPrefixes = ['.github/', 'examples/', 'scripts/', 'tests/'];
-
-  for (const requiredPath of required) {
-    if (!filePaths.has(requiredPath)) throw new Error(`Package is missing ${requiredPath}`);
-  }
-  for (const filePath of filePaths) {
-    if (forbiddenPrefixes.some((prefix) => filePath.startsWith(prefix))) {
-      throw new Error(`Development-only file leaked into package: ${filePath}`);
-    }
-  }
+  verifyPackageFileSet(pack.files.map((file) => file.path));
 
   const tarball = join(temporaryDirectory, basename(pack.filename));
   const consumerDirectory = join(temporaryDirectory, 'consumer');

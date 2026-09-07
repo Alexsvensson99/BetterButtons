@@ -1,17 +1,10 @@
-const state = {
-  theme: 'bb-ocean',
-  style: 'bb-solid',
-  size: 'bb-lg',
-  shape: 'bb-pill',
-  direction: 'ltr',
-  animation: 'bb-anim-shine',
-  shadow: false,
-  loading: false,
-  block: false,
-  motionReduced: false,
-  format: 'html',
-  label: 'Make it better'
-};
+const {
+  ARROW_ICON: arrowIcon,
+  DEFAULT_CONFIGURATION,
+  createButtonMarkup,
+  currentClasses
+} = globalThis.BetterButtonsBuilderOutput;
+const state = { ...DEFAULT_CONFIGURATION };
 
 const defaults = { ...state };
 const themeNames = {
@@ -45,73 +38,11 @@ const outputFormatNames = {
 const sharedValueKeys = ['theme', 'style', 'size', 'shape', 'direction', 'animation', 'format'];
 const sharedBooleanKeys = ['shadow', 'loading', 'block', 'motionReduced'];
 
-const arrowIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 4l4 4-4 4"></path></svg>';
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 
-function escapeHtml(value) {
-  return String(value).replace(
-    /[&<>'"]/g,
-    (character) =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;'
-      })[character]
-  );
-}
-
-function currentClasses() {
-  const classes = ['bb-btn', state.theme, state.style, state.size, state.shape, state.animation];
-  if (state.shape === 'bb-circle') classes.push('bb-icon-only');
-  if (state.shadow) classes.push('bb-shadow');
-  if (state.loading) classes.push('bb-loading');
-  if (state.block && state.shape !== 'bb-circle') classes.push('bb-block');
-  return classes;
-}
-
-function baseButtonMarkup({ jsx = false } = {}) {
-  const label = escapeHtml(state.label.trim() || 'Button');
-  const classAttribute = jsx ? 'className' : 'class';
-  const attributes = ['type="button"', `${classAttribute}="${currentClasses().join(' ')}"`];
-  if (state.direction === 'rtl') attributes.push('dir="rtl"');
-  if (state.shape === 'bb-circle') attributes.push(`aria-label="${label}"`);
-  if (state.loading) attributes.push('aria-busy="true"', 'disabled');
-  const content =
-    state.shape === 'bb-circle'
-      ? `<span ${classAttribute}="bb-btn-icon" aria-hidden="true">${arrowIcon}</span>`
-      : `${label} <span ${classAttribute}="bb-btn-icon" aria-hidden="true">${arrowIcon}</span>`;
-  return `<button ${attributes.join(' ')}>\n  ${content}\n</button>`;
-}
-
-function indentMarkup(markup, spaces) {
-  const indentation = ' '.repeat(spaces);
-  return markup
-    .split('\n')
-    .map((line) => `${indentation}${line}`)
-    .join('\n');
-}
-
 function buttonMarkup(format = state.format) {
-  const html = baseButtonMarkup();
-  if (format === 'react') {
-    return `import 'betterbuttons';\n\nexport function BetterButton() {\n  return (\n${indentMarkup(
-      baseButtonMarkup({ jsx: true }),
-      4
-    )}\n  );\n}`;
-  }
-  if (format === 'vue') {
-    return `<script setup>\nimport 'betterbuttons';\n</script>\n\n<template>\n${indentMarkup(
-      html,
-      2
-    )}\n</template>`;
-  }
-  if (format === 'svelte') {
-    return `<script>\n  import 'betterbuttons';\n</script>\n\n${html}`;
-  }
-  return html;
+  return createButtonMarkup(state, format);
 }
 
 function allowedControlValues(key) {
@@ -169,7 +100,7 @@ function updateBuilder() {
   const code = $('#code-output');
   if (!preview || !code) return;
 
-  preview.className = currentClasses().join(' ');
+  preview.className = currentClasses(state).join(' ');
   preview.dir = state.direction;
   preview.setAttribute('aria-label', state.label.trim() || 'Button');
   preview.disabled = state.loading;

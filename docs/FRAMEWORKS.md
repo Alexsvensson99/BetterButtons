@@ -24,6 +24,8 @@ Then compose the documented classes directly on native buttons and links. Keep a
 
 Each example keeps the visible label in the DOM while loading, uses the native `disabled` attribute and exposes `aria-busy`. Adapt the event name and state management to the application rather than adding BetterButtons-specific JavaScript.
 
+The visual builder serializes a custom label as a JavaScript string and binds it through a fixed local `label` variable in React, Vue and Svelte output. Braces, mustaches, markup-looking text and script-closing text therefore remain label data when the generated component is compiled.
+
 ## Navigation components
 
 For client-side navigation, apply BetterButtons classes to the framework's link component when it renders a real anchor with an `href`. Use a native button for an action on the current page.

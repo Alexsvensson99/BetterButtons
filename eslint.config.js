@@ -7,7 +7,7 @@ export default [
   },
   js.configs.recommended,
   {
-    files: ['app.js', 'theme-init.js'],
+    files: ['app.js', 'builder-output.js', 'theme-init.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       globals: globals.browser,

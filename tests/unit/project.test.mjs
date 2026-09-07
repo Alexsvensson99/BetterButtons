@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const requiredFiles = [
   '.github/workflows/ci.yml',
+  '.github/workflows/package.yml',
   '.github/workflows/publish.yml',
   'CODE_OF_CONDUCT.md',
   'CONTRIBUTING.md',
@@ -14,6 +15,7 @@ const requiredFiles = [
   'README.md',
   'SECURITY.md',
   'app.js',
+  'builder-output.js',
   'button-library.css',
   'docs/FRAMEWORKS.md',
   'docs/VISUAL_TESTING.md',
@@ -31,7 +33,9 @@ const requiredFiles = [
 ];
 const html = await readFile(join(root, 'index.html'), 'utf8');
 const app = await readFile(join(root, 'app.js'), 'utf8');
+const builderOutput = await readFile(join(root, 'builder-output.js'), 'utf8');
 const ciWorkflow = await readFile(join(root, '.github/workflows/ci.yml'), 'utf8');
+const packageWorkflow = await readFile(join(root, '.github/workflows/package.yml'), 'utf8');
 const publishWorkflow = await readFile(join(root, '.github/workflows/publish.yml'), 'utf8');
 const packageJson = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
 
@@ -53,14 +57,44 @@ test('package metadata is publishable and traceable', () => {
 test('npm publication is manual, tag-bound and provenance-enabled', () => {
   assert.match(publishWorkflow, /workflow_dispatch:/);
   assert.match(publishWorkflow, /expected_sha256:/);
-  assert.match(publishWorkflow, /id-token: write/);
+  assert.equal([...publishWorkflow.matchAll(/id-token: write/g)].length, 1);
+  assert.match(publishWorkflow, /verify:[\s\S]*permissions:\s*\n\s+contents: read/);
+  assert.match(publishWorkflow, /publish:[\s\S]*permissions:\s*\n\s+id-token: write/);
+  assert.match(publishWorkflow, /needs: verify/);
   assert.match(publishWorkflow, /name: npm-production/);
   assert.match(publishWorkflow, /startsWith\(github\.ref, 'refs\/tags\/v'\)/);
   assert.match(publishWorkflow, /BETTERBUTTONS_PUBLISH: \$\{\{ github\.ref_name \}\}/);
-  assert.match(publishWorkflow, /npm publish "\.\/\$TARBALL" --access public --provenance --ignore-scripts/);
+  assert.match(publishWorkflow, /actions\/download-artifact@[0-9a-f]{40}/);
+  assert.equal([...publishWorkflow.matchAll(/NPM_CLI_SHA256:/g)].length, 1);
+  assert.match(publishWorkflow, /NPM_CLI_SHA256: [0-9a-f]{64}/);
+  assert.match(publishWorkflow, /artifact_entries/);
+  assert.match(
+    publishWorkflow,
+    /node "\$npm_cli" publish "\$\{tarballs\[0\]\}" --access public --provenance --ignore-scripts/
+  );
+  assert.match(publishWorkflow, /actual_sha256=.*[\s\S]*node "\$npm_cli" publish/);
+  assert.match(publishWorkflow, /npm_cli_sha256=.*[\s\S]*tar -xzf/);
+  assert.match(publishWorkflow, /git merge-base --is-ancestor/);
   assert.doesNotMatch(publishWorkflow, /NODE_AUTH_TOKEN|NPM_TOKEN|\bsecrets\./);
   assert.doesNotMatch(publishWorkflow, /pull_request:/);
   assert.doesNotMatch(publishWorkflow, /^\s+push:/m);
+
+  const releaseActionLines = `${packageWorkflow}\n${publishWorkflow}`.match(/^\s+uses:.*$/gm) ?? [];
+  assert.ok(releaseActionLines.length > 0, 'Release workflows must use pinned actions');
+  for (const line of releaseActionLines) {
+    assert.match(line, /@[0-9a-f]{40}(?:\s+#.*)?$/, `Action is not pinned: ${line.trim()}`);
+  }
+
+  const publishJob = publishWorkflow.slice(publishWorkflow.indexOf('\n  publish:'));
+  assert.doesNotMatch(publishJob, /actions\/checkout/);
+  assert.doesNotMatch(publishJob, /npm install/);
+  assert.doesNotMatch(publishJob, /scripts\//);
+});
+
+test('release tags must resolve to commits already on main', () => {
+  assert.match(packageWorkflow, /fetch-depth: 0/);
+  assert.match(packageWorkflow, /git rev-parse "\$\{GITHUB_REF\}\^\{commit\}"/);
+  assert.match(packageWorkflow, /git merge-base --is-ancestor/);
 });
 
 test('continuous integration is public-runner safe', () => {
@@ -105,8 +139,9 @@ test('the builder offers framework output and fragment-based sharing', () => {
   assert.match(app, /#builder\?/);
   assert.match(app, /URLSearchParams/);
   assert.match(app, /React \/ JSX/);
-  assert.match(app, /<template>/);
-  assert.match(app, /import 'betterbuttons';/);
+  assert.match(builderOutput, /<template>/);
+  assert.match(builderOutput, /import 'betterbuttons';/);
+  assert.match(builderOutput, /serializeJavaScriptString/);
 });
 
 test('the saved theme is applied before showcase styles load', () => {
@@ -122,6 +157,6 @@ test('every static button has an explicit type', () => {
 
 test('legacy branding is gone and generated buttons are safe in forms', () => {
   assert.doesNotMatch(html, /MegaButtons/i);
-  assert.match(app, /type="button"/);
-  assert.match(app, /escapeHtml/);
+  assert.match(builderOutput, /type="button"/);
+  assert.match(builderOutput, /escapeHtml/);
 });

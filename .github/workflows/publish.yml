@@ -10,30 +10,38 @@ on:
 
 permissions:
   contents: read
-  id-token: write
+
+env:
+  NPM_CLI_SHA256: 31e9770f7dc71119a58509353b27917557aaf0ac9b5ef1a0465ee7d8ec67ae75
 
 concurrency:
   group: npm-publish-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  publish:
+  verify:
     if: startsWith(github.ref, 'refs/tags/v')
-    environment:
-      name: npm-production
-      url: https://www.npmjs.com/package/betterbuttons
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out the release tag
+      - name: Check out the complete release history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           package-manager-cache: false
-          registry-url: https://registry.npmjs.org
       - name: Use the reviewed npm CLI
         run: npm install --global npm@11.19.0
+      - name: Bind the release tag to main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main
+          tag_commit=$(git rev-parse "${GITHUB_REF}^{commit}")
+          git merge-base --is-ancestor "$tag_commit" refs/remotes/origin/main
       - name: Verify tag and release notes
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
@@ -43,7 +51,6 @@ jobs:
       - name: Revalidate package contents
         run: npm run pack:check
       - name: Build and bind the reviewed tarball
-        id: package
         env:
           EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
         run: |
@@ -53,25 +60,108 @@ jobs:
             exit 1
           fi
           mkdir release
-          npm pack --pack-destination release
-          mapfile -t tarballs < <(find release -maxdepth 1 -type f -name '*.tgz' -print)
-          if [[ ${#tarballs[@]} -ne 1 ]]; then
-            echo "Expected exactly one release tarball" >&2
+          npm pack --ignore-scripts --pack-destination release
+          npm pack npm@11.19.0 --ignore-scripts --pack-destination release
+          mapfile -t tarballs < <(find release -maxdepth 1 -type f -name 'betterbuttons-*.tgz' -print)
+          mapfile -t npm_archives < <(find release -maxdepth 1 -type f -name 'npm-11.19.0.tgz' -print)
+          if [[ ${#tarballs[@]} -ne 1 || -L "${tarballs[0]}" ]]; then
+            echo "Expected exactly one regular BetterButtons release tarball" >&2
             exit 1
           fi
-          tarball=${tarballs[0]}
-          actual_sha256=$(sha256sum "$tarball" | cut -d' ' -f1)
+          if [[ ${#npm_archives[@]} -ne 1 || -L "${npm_archives[0]}" ]]; then
+            echo "Expected exactly one regular reviewed npm CLI archive" >&2
+            exit 1
+          fi
+          actual_sha256=$(sha256sum "${tarballs[0]}" | cut -d' ' -f1)
           if [[ "$actual_sha256" != "$EXPECTED_SHA256" ]]; then
             echo "Tarball checksum does not match the reviewed package artifact" >&2
             exit 1
           fi
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-      - name: Verify the version-bound publication gate
+          npm_cli_sha256=$(sha256sum "${npm_archives[0]}" | cut -d' ' -f1)
+          if [[ "$npm_cli_sha256" != "$NPM_CLI_SHA256" ]]; then
+            echo "Reviewed npm CLI checksum mismatch" >&2
+            exit 1
+          fi
+      - name: Upload the verified publish inputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: betterbuttons-publish-${{ github.run_id }}
+          path: release/*.tgz
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+    environment:
+      name: npm-production
+      url: https://www.npmjs.com/package/betterbuttons
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+      - name: Download the verified publish inputs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: betterbuttons-publish-${{ github.run_id }}
+          path: release
+      - name: Rehash and publish the inspected tarball with provenance
         env:
           BETTERBUTTONS_PUBLISH: ${{ github.ref_name }}
-        run: node scripts/publish-guard.mjs
-      - name: Publish the inspected tarball with provenance
-        env:
-          BETTERBUTTONS_PUBLISH: ${{ github.ref_name }}
-          TARBALL: ${{ steps.package.outputs.tarball }}
-        run: npm publish "./$TARBALL" --access public --provenance --ignore-scripts
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          set -euo pipefail
+          mapfile -t artifact_entries < <(find release -mindepth 1 -maxdepth 1 -print)
+          mapfile -t tarballs < <(find release -maxdepth 1 -type f -name 'betterbuttons-*.tgz' -print)
+          mapfile -t npm_archives < <(find release -maxdepth 1 -type f -name 'npm-11.19.0.tgz' -print)
+          if [[ ${#artifact_entries[@]} -ne 2 ]]; then
+            echo "Publish artifact must contain exactly the package and reviewed npm CLI archives" >&2
+            exit 1
+          fi
+          if [[ ${#tarballs[@]} -ne 1 || -L "${tarballs[0]}" ]]; then
+            echo "Expected exactly one regular BetterButtons release tarball" >&2
+            exit 1
+          fi
+          if [[ ${#npm_archives[@]} -ne 1 || -L "${npm_archives[0]}" ]]; then
+            echo "Expected exactly one regular reviewed npm CLI archive" >&2
+            exit 1
+          fi
+          if [[ ! "$EXPECTED_SHA256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "expected_sha256 must be exactly 64 lowercase hexadecimal characters" >&2
+            exit 1
+          fi
+          downloaded_sha256=$(sha256sum "${tarballs[0]}" | cut -d' ' -f1)
+          if [[ "$downloaded_sha256" != "$EXPECTED_SHA256" ]]; then
+            echo "Downloaded tarball checksum does not match the reviewed artifact" >&2
+            exit 1
+          fi
+          npm_cli_sha256=$(sha256sum "${npm_archives[0]}" | cut -d' ' -f1)
+          if [[ "$npm_cli_sha256" != "$NPM_CLI_SHA256" ]]; then
+            echo "Downloaded npm CLI checksum does not match the pinned archive" >&2
+            exit 1
+          fi
+          mkdir npm-cli
+          tar -xzf "${npm_archives[0]}" -C npm-cli
+          npm_cli=npm-cli/package/bin/npm-cli.js
+          if [[ "$(node "$npm_cli" --version)" != "11.19.0" ]]; then
+            echo "Reviewed npm CLI version mismatch" >&2
+            exit 1
+          fi
+          package_version=$(tar -xOf "${tarballs[0]}" package/package.json | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+          expected_ref="v${package_version}"
+          if [[ "$GITHUB_REF_NAME" != "$expected_ref" || "$BETTERBUTTONS_PUBLISH" != "$expected_ref" ]]; then
+            echo "Release tag and publication approval must match the tarball version" >&2
+            exit 1
+          fi
+          actual_sha256=$(sha256sum "${tarballs[0]}" | cut -d' ' -f1)
+          if [[ "$actual_sha256" != "$EXPECTED_SHA256" ]]; then
+            echo "Tarball checksum changed after verification" >&2
+            exit 1
+          fi
+          node "$npm_cli" publish "${tarballs[0]}" --access public --provenance --ignore-scripts

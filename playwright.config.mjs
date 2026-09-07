@@ -1,7 +1,11 @@
 import { defineConfig } from '@playwright/test';
+import { assertBrowserLaunchAllowed } from './scripts/playwright-preflight.mjs';
+
+assertBrowserLaunchAllowed();
 
 export default defineConfig({
   testDir: './tests/browser',
+  globalSetup: './scripts/playwright-preflight.mjs',
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

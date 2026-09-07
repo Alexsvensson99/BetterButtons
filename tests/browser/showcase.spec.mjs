@@ -181,6 +181,43 @@ test('share links reject unknown classes and escape shared labels', async ({ pag
   await expect(page.locator('#code-output img')).toHaveCount(0);
 });
 
+test('framework exports keep shared labels inert instead of creating expressions', async ({ page }) => {
+  const cases = [
+    {
+      binding: '{label}',
+      format: 'react',
+      label: '{globalThis.__bbProbe=1}'
+    },
+    {
+      binding: '{{ label }}',
+      format: 'vue',
+      label: '{{globalThis.__bbProbe=1}}'
+    },
+    {
+      binding: '{label}',
+      format: 'svelte',
+      label: '{globalThis.__bbProbe=1}'
+    }
+  ];
+
+  for (const { binding, format, label } of cases) {
+    const parameters = new URLSearchParams({
+      v: '1',
+      format,
+      label
+    });
+    await page.goto(`/#builder?${parameters}`);
+    await page.reload();
+
+    await expect(page.locator('#builder-preview-button')).toContainText(label);
+    const output = await page.locator('#code-output').textContent();
+    expect(output).toContain(`const label = ${JSON.stringify(label)};`);
+    expect(output).toContain(binding);
+    expect(output).not.toContain(`${label} <span`);
+    expect(await page.evaluate(() => globalThis.__bbProbe)).toBeUndefined();
+  }
+});
+
 test('explicit shapes have stable priority over style geometry', async ({ page }) => {
   await page.getByRole('button', { name: 'Flat', exact: true }).click();
   await page.getByLabel('Button shape').selectOption('bb-pill');

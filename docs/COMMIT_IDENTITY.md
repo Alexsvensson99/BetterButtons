@@ -15,7 +15,7 @@ Before a public push, inspect the outgoing maintainer identities and verify that
 
 ## Repository guard
 
-The `Commit identity privacy` CI job checks every commit added by a pull request or push. It rejects maintainer author or committer metadata that does not use the approved noreply identity. Failure messages identify the commit and role without echoing the rejected address.
+The `Commit identity privacy` CI job checks every commit added by a pull request or push. It recognizes the maintainer's documented name and GitHub handle after Unicode, case and whitespace normalization, then rejects maintainer author or committer metadata that does not use the approved noreply identity. Failure messages identify the commit and role without echoing the rejected address. The guard deliberately stores no personal email alias.
 
 External contributor identities are not restricted by this maintainer-specific guard.
 
